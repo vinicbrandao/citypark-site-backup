@@ -6,19 +6,23 @@
   <meta name="theme-color" content="#091253">
   <meta name="robots" content="noindex, nofollow">
   <title>Gestão de Propostas | City Park</title>
-  <link rel="stylesheet" href="css/gestao-propostas.css?v=20260824-2">
+  <link rel="stylesheet" href="css/gestao-propostas.css?v=20260826-1">
+  <link rel="stylesheet" href="css/admin-header.css?v=20260826-1">
   <link rel="icon" href="data:,">
   <style>html:not(.page-authorized) body { visibility: hidden; }</style>
 </head>
 <body>
-  <header class="figma-topbar">
-    <a class="figma-brand" href="painel-admin.html" aria-label="Início do Ambiente Administrativo"><img src="img/CityPark-Branco.png" alt="City Park"></a>
-    <a class="sales-link" href="vendas.html">Tabela de Vendas</a>
-    <button id="btnSairAdmin" class="hidden-control" type="button">Sair</button>
+  <header class="admin-header">
+    <a class="admin-header-brand" href="painel-admin.html" aria-label="Início do Ambiente Administrativo"><img src="img/CityPark-Branco.png" alt="City Park"></a>
+    <nav class="admin-header-actions" aria-label="Ações administrativas">
+      <a class="admin-header-button admin-header-context" href="painel-admin.html">Voltar</a>
+      <a class="admin-header-button" href="vendas.html">Tabela de Vendas</a>
+      <button id="btnSairAdmin" class="admin-header-button" type="button">Sair</button>
+    </nav>
   </header>
   <section class="figma-titlebar"><h1>Ambiente Administrativo</h1></section>
 
-  <main  class="proposal-management">
+  <main class="proposal-management">
     <button id="refreshProposals" class="hidden-control" type="button">Atualizar</button>
     <div class="hidden-summary" aria-hidden="true"><span id="pendingCount">—</span><span id="approvedCount">—</span><span id="closedCount">—</span><span id="inactiveCount">—</span></div>
     <input id="proposalSearch" class="hidden-control" type="search">

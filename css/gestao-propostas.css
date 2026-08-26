@@ -15,7 +15,7 @@ button,input,select { font:inherit; }
 .sales-link { width:175px; height:51px; display:inline-flex; align-items:center; justify-content:center; color:#f4f4f4; background:#6d6d69; border:1px solid #52524f; border-radius:5px 0 0 5px; font-size:13px; text-decoration:none; }
 .figma-titlebar { height:81px; display:grid; place-items:center; color:#d9d9d9; background:var(--black); }.figma-titlebar h1 { margin:0; font-size:31px; }
 
-.proposal-management { min-height:calc(100vh - 142px); padding:20px 32px 23px; background:var(--page-gray); }
+.proposal-management { min-height:calc(100vh - 142px); padding:20px 32px 23px; background:#efeae1; }
 .management-card { min-height:780px; padding:10px 14px 30px; border:1px solid #111; border-radius:8px; background:var(--paper); overflow:hidden; }
 .management-heading { height:33px; display:flex; align-items:flex-start; gap:9px; }
 .management-heading h2 { margin:1px 0 0; font-size:21px; line-height:1; font-weight:400; }
@@ -44,3 +44,41 @@ button,input,select { font:inherit; }
 @media (max-width:700px) {
   .figma-titlebar h1 { font-size:25px; }.sales-link { width:145px; }.proposal-management { padding:15px 10px; }.management-card { padding:10px 8px 20px; }.management-heading small { display:none; }.proposal-table { min-width:850px; }
 }
+
+/*
+ * AJUSTE REVERSÍVEL — tipografia das informações da tabela (2026-08-26)
+ * Para desfazer somente esta alteração, remova este bloco até o fim do arquivo.
+ */
+.proposal-table tbody td {
+  height: auto;
+  min-height: 130px;
+  padding: 12px 10px;
+  font-family: "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  font-size: 12px;
+  line-height: 1.4;
+  overflow-wrap: anywhere;
+  word-break: normal;
+}
+
+.proposal-table .cell-title,
+.proposal-table .cell-line {
+  max-width: 100%;
+  overflow-wrap: anywhere;
+}
+
+.proposal-table .cell-title {
+  margin-bottom: 7px;
+  font-size: 13px;
+  font-weight: 600;
+  line-height: 1.3;
+}
+
+.proposal-table .cell-line {
+  margin-bottom: 5px;
+  font-size: 12px;
+  line-height: 1.4;
+}
+
+.proposal-table .cell-line:last-child { margin-bottom: 0; }
+.proposal-table .proposal-id { font-weight: 600; }
+.proposal-table .status-badge { font-family: inherit; font-size: 11px; line-height: 1.25; }

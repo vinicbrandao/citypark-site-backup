@@ -6,15 +6,19 @@
   <meta name="theme-color" content="#091253">
   <meta name="robots" content="noindex, nofollow">
   <title>Detalhamento da Proposta | City Park</title>
-  <link rel="stylesheet" href="css/detalhes-proposta.css?v=20260824-3">
+  <link rel="stylesheet" href="css/detalhes-proposta.css?v=20260826-2">
+  <link rel="stylesheet" href="css/admin-header.css?v=20260826-1">
   <link rel="icon" href="data:,">
   <style>html:not(.page-authorized) body { visibility: hidden; }</style>
 </head>
 <body>
-  <header class="figma-topbar">
-    <a class="figma-brand" href="painel-admin.html" aria-label="Início do Ambiente Administrativo"><img src="img/CityPark-Branco.png" alt="City Park"></a>
-    <a class="sales-link" href="vendas.html">Tabela de Vendas</a>
-    <button id="btnSair" class="hidden-control" type="button">Sair</button>
+  <header class="admin-header">
+    <a class="admin-header-brand" href="painel-admin.html" aria-label="Início do Ambiente Administrativo"><img src="img/CityPark-Branco.png" alt="City Park"></a>
+    <nav class="admin-header-actions" aria-label="Ações administrativas">
+      <a class="admin-header-button admin-header-context" href="gestao-propostas.html">Gestão de Propostas</a>
+      <a class="admin-header-button" href="vendas.html">Tabela de Vendas</a>
+      <button id="btnSair" class="admin-header-button" type="button">Sair</button>
+    </nav>
   </header>
 
   <div id="loadingState" class="loading-state" role="status" aria-live="polite"><span class="spinner" aria-hidden="true"></span><p>Carregando proposta…</p></div>
@@ -60,7 +64,7 @@
           </article>
 
           <article class="finance-card">
-            <div class="condition-heading"><h3>Condição de Proposta:</h3><span id="financeConditionType">—</span><span class="condition-or">ou</span><span id="financeAlternative" class="condition-alternative">Padrão</span><span id="financeValidation" class="validation-badge">—</span></div>
+            <div class="condition-heading"><h3>Condição de Proposta:</h3><span id="financeConditionType">—</span><span id="financeValidation" class="validation-badge">—</span></div>
             <div class="finance-totals">
               <div><span>Valor da tabela</span><strong id="financeTableValue">—</strong></div><div><span>Total preenchido</span><strong id="financeProposalValue">—</strong></div><div id="financeDifferenceCard"><span>Diferença</span><strong id="financeDifference">—</strong></div>
             </div>
@@ -82,6 +86,14 @@
           <div class="section-heading"><p class="eyebrow">Rastreabilidade</p><h2>Histórico</h2><p>Registro das alterações realizadas desde a criação da proposta.</p></div>
           <div id="historyTimeline" class="history-timeline" aria-live="polite"></div>
         </section>
+
+        <section id="cancelamento" class="detail-section cancellation-section" hidden>
+          <div class="section-heading"><p class="eyebrow">Ação administrativa</p><h2>Cancelamento da proposta</h2><p>Disponível somente enquanto a proposta estiver aprovada e ainda não tiver sido convertida em venda.</p></div>
+          <div class="cancellation-card">
+            <div><strong>Cancelar proposta aprovada</strong><p>A proposta ficará inativa, a unidade voltará a ficar disponível e a ação será registrada no histórico.</p></div>
+            <button id="cancelApprovedProposal" class="danger-button cancellation-button" type="button">Cancelar proposta</button>
+          </div>
+        </section>
       </div>
     </div>
   </main>
@@ -90,7 +102,7 @@
     <div class="modal-card">
       <button class="modal-close" type="button" data-close-modal aria-label="Fechar">×</button><span id="confirmationIcon" class="modal-icon" aria-hidden="true">?</span>
       <h2 id="confirmationTitle">Confirmar ação</h2><p id="confirmationText">—</p>
-      <label id="rejectionReasonField" class="reason-field" hidden><span>Motivo da recusa</span><textarea id="rejectionReason" rows="4" maxlength="1000" placeholder="Informe o motivo para o histórico da proposta"></textarea><small id="rejectionReasonError" hidden>Informe o motivo da recusa.</small></label>
+      <label id="rejectionReasonField" class="reason-field" hidden><span id="actionReasonLabel">Motivo da recusa</span><textarea id="rejectionReason" rows="4" maxlength="1000" placeholder="Informe o motivo para o histórico da proposta"></textarea><small id="rejectionReasonError" hidden>Informe o motivo da recusa.</small></label>
       <div class="modal-actions"><button class="secondary-button" type="button" data-close-modal>Cancelar</button><button id="confirmAction" class="primary-button" type="button">Confirmar</button></div>
     </div>
   </div>
@@ -110,6 +122,6 @@
   </div>
 
   <div id="toast" class="toast" role="status" aria-live="polite"></div>
-  <script src="js/condicao-venda.js?v=20260824-3"></script><script type="module" src="js/detalhes-proposta.js?v=20260824-3"></script>
+  <script src="js/condicao-venda.js?v=20260824-3"></script><script type="module" src="js/detalhes-proposta.js?v=20260826-2"></script>
 </body>
 </html>

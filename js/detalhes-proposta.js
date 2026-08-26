@@ -18,11 +18,11 @@ const PaymentPlan = window.CityParkPaymentPlan;
 const $ = id => document.getElementById(id);
 const elements = {
   loading: $("loadingState"), app: $("proposalApp"), logout: $("btnSair"),
-  proposalId: $("summaryProposalId"), createdAt: $("summaryCreatedAt"), unit: $("summaryUnit"), broker: $("summaryBroker"), creci: $("summaryCreci"), client: $("summaryClient"), clientDocument: $("summaryDocument"),
+  summary: document.querySelector(".proposal-summary"), proposalId: $("summaryProposalId"), createdAt: $("summaryCreatedAt"), unit: $("summaryUnit"), broker: $("summaryBroker"), creci: $("summaryCreci"), client: $("summaryClient"), clientDocument: $("summaryDocument"),
   actions: $("proposalActions"), approve: $("approveProposal"), reject: $("rejectProposal"), status: $("proposalStatus"), expiry: $("expiryText"), tags: $("reservationTags"),
   brokerTab: $("brokerTab"), clientTab: $("clientTab"), brokerPanel: $("brokerPanel"), clientPanel: $("clientPanel"), brokerInformation: $("brokerInformation"), clientInformation: $("clientInformation"),
-  financeType: $("financeConditionType"), financeAlternative: $("financeAlternative"), financeValidation: $("financeValidation"), tableValue: $("financeTableValue"), proposalValue: $("financeProposalValue"), difference: $("financeDifference"), differenceCard: $("financeDifferenceCard"), financeRows: $("financeRows"),
-  history: $("historyTimeline"), confirmationModal: $("confirmationModal"), confirmationIcon: $("confirmationIcon"), confirmationTitle: $("confirmationTitle"), confirmationText: $("confirmationText"), reasonField: $("rejectionReasonField"), reason: $("rejectionReason"), reasonError: $("rejectionReasonError"), confirmAction: $("confirmAction"),
+  financeType: $("financeConditionType"), financeValidation: $("financeValidation"), tableValue: $("financeTableValue"), proposalValue: $("financeProposalValue"), difference: $("financeDifference"), differenceCard: $("financeDifferenceCard"), financeRows: $("financeRows"),
+  history: $("historyTimeline"), cancellationSection: $("cancelamento"), cancelApproved: $("cancelApprovedProposal"), confirmationModal: $("confirmationModal"), confirmationIcon: $("confirmationIcon"), confirmationTitle: $("confirmationTitle"), confirmationText: $("confirmationText"), reasonField: $("rejectionReasonField"), reasonLabel: $("actionReasonLabel"), reason: $("rejectionReason"), reasonError: $("rejectionReasonError"), confirmAction: $("confirmAction"),
   financeModal: $("financeModal"), financeForm: $("financeEditForm"), editDescription: $("editDescription"), editQuantity: $("editQuantity"), editValue: $("editValue"), editDueDate: $("editDueDate"), editError: $("editFinanceError"), saveFinance: $("saveFinance"), toast: $("toast")
 };
 
@@ -64,6 +64,7 @@ function bindEvents() {
   elements.clientTab.addEventListener("click", () => showDataTab("client"));
   elements.approve.addEventListener("click", () => openConfirmation("approve"));
   elements.reject.addEventListener("click", () => openConfirmation("reject"));
+  elements.cancelApproved.addEventListener("click", () => openConfirmation("cancel"));
   elements.confirmAction.addEventListener("click", executeConfirmedAction);
   document.querySelectorAll("[data-close-modal]").forEach(button => button.addEventListener("click", closeConfirmation));
   document.querySelectorAll("[data-close-finance]").forEach(button => button.addEventListener("click", closeFinanceModal));
@@ -128,7 +129,9 @@ function renderReservation() {
   const group = statusGroup(status);
   elements.status.textContent = statusLabel(status);
   elements.status.dataset.group = group;
+  elements.summary.dataset.statusGroup = group;
   elements.actions.hidden = status !== "reservada";
+  elements.cancellationSection.hidden = status !== "aprovada";
   elements.expiry.textContent = expiryLabel(status, state.proposal.expiraEm);
   const stages = ["Análise comercial", "Validação de documentos", "Aguardando assinatura", "Envio Sienge", "Contraproposta", "Vendida"];
   const approved = ["aprovada", "vendida"].includes(status);
@@ -174,7 +177,6 @@ function renderFinance() {
   elements.differenceCard.classList.toggle("unbalanced", !balanced);
   const customCondition = ["outro", "personalizada", "personalizado"].includes(normalizeStatus(condition.tipo));
   elements.financeType.textContent = customCondition ? "Outro" : "Padrão";
-  elements.financeAlternative.textContent = customCondition ? "Padrão" : "Outro";
   elements.financeValidation.textContent = balanced ? "Valores conferidos" : "Revisão necessária";
   elements.financeValidation.classList.toggle("invalid", !balanced);
   elements.financeRows.innerHTML = rows.length
@@ -220,19 +222,27 @@ function legacyFinanceRows(condition) {
 
 function openConfirmation(action) {
   state.modalAction = action;
-  const approving = action === "approve";
-  elements.confirmationIcon.textContent = approving ? "✓" : "!";
-  elements.confirmationIcon.className = `modal-icon ${approving ? "success" : "danger"}`;
-  elements.confirmationTitle.textContent = approving ? "Aprovar esta proposta?" : "Recusar esta proposta?";
-  elements.confirmationText.textContent = approving ? "A proposta será aprovada e o temporizador de expiração será removido." : "A proposta ficará inativa e a unidade voltará a ficar disponível.";
-  elements.confirmAction.textContent = approving ? "Sim, aprovar proposta" : "Confirmar recusa";
-  elements.confirmAction.className = approving ? "primary-button" : "danger-button";
-  elements.reasonField.hidden = approving;
+  const configurations = {
+    approve: { icon:"✓", tone:"success", title:"Aprovar esta proposta?", text:"A proposta será aprovada e o temporizador de expiração será removido.", confirm:"Sim, aprovar proposta", requiresReason:false },
+    reject: { icon:"!", tone:"danger", title:"Recusar esta proposta?", text:"A proposta ficará inativa e a unidade voltará a ficar disponível.", confirm:"Confirmar recusa", reasonLabel:"Motivo da recusa", reasonError:"Informe o motivo da recusa.", requiresReason:true },
+    cancel: { icon:"!", tone:"danger", title:"Cancelar esta proposta aprovada?", text:"A proposta ficará cancelada, a unidade voltará a ficar disponível e a ação será registrada no histórico.", confirm:"Confirmar cancelamento", reasonLabel:"Motivo do cancelamento", reasonError:"Informe o motivo do cancelamento.", requiresReason:true }
+  };
+  const configuration = configurations[action];
+  if (!configuration) return;
+  elements.confirmationIcon.textContent = configuration.icon;
+  elements.confirmationIcon.className = `modal-icon ${configuration.tone}`;
+  elements.confirmationTitle.textContent = configuration.title;
+  elements.confirmationText.textContent = configuration.text;
+  elements.confirmAction.textContent = configuration.confirm;
+  elements.confirmAction.className = configuration.requiresReason ? "danger-button" : "primary-button";
+  elements.reasonField.hidden = !configuration.requiresReason;
+  elements.reasonLabel.textContent = configuration.reasonLabel || "Motivo";
+  elements.reasonError.textContent = configuration.reasonError || "Informe o motivo desta ação.";
   elements.reason.value = "";
   elements.reasonError.hidden = true;
   elements.confirmationModal.hidden = false;
   document.body.classList.add("modal-open");
-  (approving ? elements.confirmAction : elements.reason).focus();
+  (configuration.requiresReason ? elements.reason : elements.confirmAction).focus();
 }
 
 function closeConfirmation() {
@@ -244,18 +254,21 @@ function closeConfirmation() {
 
 async function executeConfirmedAction() {
   const reason = elements.reason.value.trim();
-  if (state.modalAction === "reject" && !reason) {
+  if (["reject", "cancel"].includes(state.modalAction) && !reason) {
     elements.reasonError.hidden = false;
     elements.reason.focus();
     return;
   }
   elements.confirmAction.disabled = true;
   try {
-    if (state.modalAction === "approve") await approveProposal();
-    else if (state.modalAction === "reject") await rejectProposal(reason);
+    const action = state.modalAction;
+    if (action === "approve") await approveProposal();
+    else if (action === "reject") await rejectProposal(reason);
+    else if (action === "cancel") await cancelApprovedProposal(reason);
     elements.confirmationModal.hidden = true;
     document.body.classList.remove("modal-open");
-    showToast(state.modalAction === "approve" ? "Proposta aprovada e expiração removida." : "Proposta recusada e unidade liberada.");
+    const messages = { approve:"Proposta aprovada e expiração removida.", reject:"Proposta recusada e unidade liberada.", cancel:"Proposta cancelada e unidade liberada." };
+    showToast(messages[action] || "Ação concluída.");
     state.modalAction = null;
     await loadProposal();
   } catch (error) {
@@ -303,6 +316,29 @@ async function rejectProposal(reason) {
     transaction.update(unitRef, { status:"disponivel", propostaAtualId:null, propostaId:deleteField(), atualizadoEm:serverTimestamp(), expiraEm:null, vendidoEm:null });
     transaction.set(unitHistoryRef, { ...common, statusNovo:"disponivel", acao:"unidade disponível", observacao:"Unidade liberada após a recusa da proposta." });
     transaction.set(proposalHistoryRef, { ...common, acao:"proposta recusada", observacao:reason });
+  });
+}
+
+async function cancelApprovedProposal(reason) {
+  requireLinkedUnit();
+  const proposalRef = doc(db, "propostas", state.proposalId);
+  const unitRef = doc(db, "unidades", state.proposal.unidadeId);
+  const unitHistoryRef = doc(collection(db, "historico_unidades"));
+  const proposalHistoryRef = doc(collection(db, "historico_propostas"));
+  await runTransaction(db, async transaction => {
+    const [proposalSnapshot, unitSnapshot] = await Promise.all([transaction.get(proposalRef), transaction.get(unitRef)]);
+    if (!proposalSnapshot.exists() || !unitSnapshot.exists()) throw new Error("Proposta ou unidade não encontrada.");
+    const proposal = proposalSnapshot.data();
+    const unit = unitSnapshot.data();
+    const linkedProposalId = unit.propostaAtualId || unit.propostaId || null;
+    if (normalizeStatus(proposal.statusProposta) !== "aprovada" || normalizeStatus(unit.status) !== "aprovada" || (linkedProposalId && linkedProposalId !== state.proposalId)) {
+      throw new Error("Esta proposta não pode mais ser cancelada. Atualize a página.");
+    }
+    const common = historyCommon(proposal, unit, "aprovada", "cancelada");
+    transaction.update(proposalRef, { statusProposta:"cancelada", adminId:state.adminUser.uid, observacaoAdmin:reason, observacaoCancelamento:reason, tagsAdmin:[], atualizadoEm:serverTimestamp(), expiraEm:null, vendidoEm:null });
+    transaction.update(unitRef, { status:"disponivel", propostaAtualId:null, propostaId:deleteField(), atualizadoEm:serverTimestamp(), expiraEm:null, vendidoEm:null });
+    transaction.set(unitHistoryRef, { ...common, statusNovo:"disponivel", acao:"unidade disponível", observacao:"Unidade liberada após o cancelamento da proposta aprovada." });
+    transaction.set(proposalHistoryRef, { ...common, acao:"proposta cancelada", observacao:reason });
   });
 }
 

@@ -55,3 +55,263 @@ a { color:inherit; }
 @media (max-width:650px) {
   .sales-link { margin-right:8px; }.proposal-summary { height:auto; min-height:65px; grid-template-columns:1fr 72px; }.summary-meta { display:none; }.detail-shell { display:block; }.anchor-sidebar { padding:6px; border-right:0; border-bottom:1px solid #111; position:sticky; top:65px; z-index:18; }.anchor-sidebar nav { width:100%; margin:0; padding:6px; display:flex; overflow:auto; position:static; }.anchor-sidebar a { min-width:max-content; }.detail-content { width:100%; }.action-heading { align-items:flex-start; flex-direction:column; }.proposal-actions { gap:8px; }.tag-list { gap:5px; }.process-tag { font-size:13px; }.data-tabs { gap:8px; }.data-tabs button { font-size:15px; }.data-panel,.history-timeline,.history-empty { width:100%; }.condition-heading { flex-wrap:wrap; }.validation-badge { display:none; }.finance-card { overflow:hidden; }.finance-table-wrap { padding:0 5px 15px; }.finance-totals { padding:9px 5px; }.finance-table { min-width:590px; }.edit-grid { grid-template-columns:1fr; }.edit-grid .full-field { grid-column:auto; }
 }
+
+/*
+ * AJUSTE REVERSÍVEL — tipografia e distribuição da página de detalhes (2026-08-26)
+ * Para desfazer somente esta alteração, remova este bloco até o fim do arquivo.
+ */
+body {
+  font-family: "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  font-size: 15px;
+  line-height: 1.45;
+}
+
+html { scroll-padding-top: 116px; }
+
+.proposal-summary {
+  height: auto;
+  min-height: 96px;
+  grid-template-columns: minmax(330px, .9fr) minmax(0, 2.35fr) auto;
+  align-items: stretch;
+  box-shadow: 0 5px 16px rgba(0, 0, 0, .12);
+}
+
+.summary-primary {
+  min-width: 0;
+  padding: 14px 18px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.summary-primary p,
+.summary-primary span {
+  font-size: 14px;
+  line-height: 1.45;
+  overflow-wrap: anywhere;
+}
+
+.summary-primary p strong { font-size: 15px; }
+
+.summary-meta {
+  padding: 12px 18px;
+  grid-template-columns: minmax(110px, .65fr) minmax(190px, 1fr) minmax(250px, 1.45fr);
+  align-items: center;
+  gap: 14px;
+}
+
+.summary-meta div {
+  min-width: 0;
+  display: block;
+}
+
+.summary-meta dt,
+.summary-meta dd {
+  display: inline;
+  font-size: 13px;
+  line-height: 1.35;
+}
+
+.summary-meta dt { font-weight: 600; }
+.summary-meta dd { margin-left: 4px; font-weight: 650; overflow-wrap: anywhere; }
+
+.summary-meta small {
+  display: block;
+  margin-top: 5px;
+  color: #333;
+  font-size: 12px;
+  line-height: 1.35;
+  overflow-wrap: anywhere;
+}
+
+.summary-back {
+  width: auto;
+  min-width: 76px;
+  height: 40px;
+  margin: auto 18px auto 4px;
+  padding: 0 13px;
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.detail-shell { min-height: calc(100vh - 160px); }
+.anchor-sidebar nav { top: 116px; }
+
+.detail-content {
+  width: 100%;
+  max-width: 1180px;
+  padding: 22px 24px 135px;
+}
+
+.detail-section { width: 100%; }
+
+.section-heading h2,
+.detail-section .section-heading h2 {
+  font-size: 28px;
+  line-height: 1.2;
+  font-weight: 650;
+}
+
+.section-heading > p,
+.section-heading div > p {
+  font-size: 14px;
+  line-height: 1.45;
+}
+
+.action-heading {
+  width: 100%;
+  align-items: center;
+}
+
+.proposal-actions {
+  margin-left: auto;
+  justify-content: flex-end;
+  gap: 12px;
+}
+
+.danger-button,
+.success-button {
+  min-height: 42px;
+  height: auto;
+  padding: 9px 16px;
+  font-size: 15px;
+  line-height: 1.2;
+  font-weight: 650;
+}
+
+.danger-button {
+  color: #fff;
+  background: #d96b70;
+  border-color: #a94449;
+}
+
+.danger-button:hover { background: #c85b61; }
+
+.success-button {
+  color: #fff;
+  background: #25ad82;
+  border-color: #148c68;
+}
+
+.success-button:hover { background: #1f9470; }
+
+.reservation-heading h3 { font-size: 20px; font-weight: 650; }
+.reservation-heading p { font-size: 14px; line-height: 1.4; }
+
+.process-tag {
+  min-height: 34px;
+  padding: 6px 11px;
+  font-size: 15px;
+  line-height: 1.25;
+}
+
+.data-tabs button {
+  min-height: 42px;
+  height: auto;
+  padding: 8px 13px;
+  font-size: 16px;
+  font-weight: 650;
+}
+
+.data-panel {
+  width: min(680px, 100%);
+  padding: 18px 8px 0;
+}
+
+.data-panel dl { gap: 17px 30px; }
+.data-panel dt { font-size: 14px; line-height: 1.35; }
+.data-panel dd { margin-top: 3px; font-size: 15px; line-height: 1.4; font-weight: 650; }
+
+.condition-heading h3 { font-size: 19px; font-weight: 650; }
+.condition-heading > span:not(.validation-badge) { font-size: 15px; line-height: 1.35; }
+.finance-totals span { font-size: 13px; }
+.finance-totals strong { font-size: 15px; }
+.finance-table th { font-size: 14px; font-weight: 650; }
+.finance-table td { font-size: 14px; line-height: 1.35; }
+
+.empty-module strong { font-size: 17px; font-weight: 600; }
+.history-event p { font-size: 14px; line-height: 1.5; }
+.history-empty { font-size: 15px; line-height: 1.5; }
+.modal-card { font-size: 15px; line-height: 1.45; }
+
+@media (max-width: 900px) {
+  .proposal-summary {
+    grid-template-columns: minmax(260px, .9fr) minmax(0, 1.5fr) auto;
+  }
+
+  .summary-meta {
+    grid-template-columns: minmax(105px, .65fr) minmax(180px, 1fr);
+    gap: 10px;
+  }
+
+  .detail-content { max-width: none; padding-inline: 18px; }
+}
+
+@media (max-width: 650px) {
+  html { scroll-padding-top: 96px; }
+
+  .proposal-summary {
+    min-height: 88px;
+    grid-template-columns: minmax(0, 1fr) auto;
+  }
+
+  .summary-primary { padding: 11px 14px; border-right-width: 5px; }
+  .summary-primary p,
+  .summary-primary span { font-size: 13px; }
+  .summary-primary p strong { font-size: 14px; }
+  .summary-meta { display: none; }
+  .summary-back { min-width: 68px; margin-right: 10px; padding-inline: 10px; }
+
+  .anchor-sidebar { top: 88px; }
+  .detail-content { padding: 18px 14px 96px; }
+
+  .action-heading { align-items: stretch; }
+  .proposal-actions {
+    width: 100%;
+    margin-left: 0;
+    align-self: stretch;
+    justify-content: flex-end;
+  }
+
+  .danger-button,
+  .success-button { flex: 0 1 auto; }
+
+  .data-panel dl { grid-template-columns: 1fr; gap: 14px; }
+  .process-tag { font-size: 14px; }
+}
+
+/*
+ * AJUSTE REVERSÍVEL — estados e cancelamento da proposta (2026-08-26)
+ * Para desfazer apenas a apresentação desta etapa, remova este bloco.
+ */
+.proposal-summary { --proposal-status-color: var(--orange); }
+.proposal-summary[data-status-group="approved"] { --proposal-status-color: #25ad82; }
+.proposal-summary[data-status-group="closed"] { --proposal-status-color: #d64f55; }
+.proposal-summary[data-status-group="inactive"] { --proposal-status-color: #949494; }
+.proposal-summary .summary-primary { border-right-color: var(--proposal-status-color); }
+
+#cancelamento {
+  padding-left: 5px;
+  padding-bottom: 44px;
+}
+
+.cancellation-card {
+  width: min(760px, 100%);
+  padding: 18px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 24px;
+  border: 1px solid #b7a3a3;
+  border-radius: 9px;
+  background: #e2dada;
+}
+
+.cancellation-card strong { font-size: 16px; font-weight: 650; }
+.cancellation-card p { margin: 5px 0 0; max-width: 540px; font-size: 14px; line-height: 1.45; }
+.cancellation-button { flex: 0 0 auto; }
+
+@media (max-width: 650px) {
+  .cancellation-card { align-items: stretch; flex-direction: column; gap: 14px; }
+  .cancellation-button { align-self: flex-end; }
+}
