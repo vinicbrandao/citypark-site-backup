@@ -220,7 +220,7 @@ button, input, textarea { font: inherit; }
 .proposal-value-summary {
   margin-top: 18px;
   display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
+  grid-template-columns: repeat(4, minmax(0, 1fr));
   gap: 12px;
 }
 
@@ -419,7 +419,7 @@ button, input, textarea { font: inherit; }
   min-width: 0;
   padding: 13px;
   display: grid;
-  grid-template-columns: minmax(160px, 1.25fr) 74px minmax(118px, .9fr) minmax(138px, 1fr) minmax(100px, .7fr);
+  grid-template-columns: minmax(150px, 1.15fr) 62px minmax(132px, 1fr) minmax(112px, .85fr) 82px minmax(96px, .72fr);
   align-items: end;
   gap: 11px;
   border-bottom: 1px solid #e4e9f0;
@@ -461,10 +461,12 @@ button, input, textarea { font: inherit; }
 .payment-row input:focus { border-color: var(--blue); box-shadow: 0 0 0 3px rgba(0, 74, 173, .1); }
 .payment-row input:disabled { color: #8993a2; background: #e9edf2; cursor: not-allowed; }
 .payment-row input.invalid { border-color: #cf3c3c; box-shadow: 0 0 0 3px rgba(207, 60, 60, .08); }
-.payment-total { align-self: center; color: var(--navy); font-size: .76rem; text-align: right; white-space: nowrap; }
+.payment-total,
+.payment-percentage { align-self: center; color: var(--navy); font-size: .76rem; text-align: right; white-space: nowrap; }
+.payment-percentage::before { content: "Porcentagem"; display: block; margin-bottom: 4px; color: var(--muted); font-size: .62rem; font-weight: 750; }
 .special-payment { grid-template-columns: minmax(150px, .9fr) minmax(190px, 1.35fr) minmax(118px, .8fr) minmax(138px, .9fr) minmax(100px, .7fr); }
-.dynamic-payment-row { grid-template-columns: minmax(150px, 1fr) 74px minmax(118px, .9fr) minmax(138px, 1fr) minmax(100px, .7fr) 38px; }
-.dynamic-payment-row.is-special { grid-template-columns: minmax(190px, 1.35fr) 74px minmax(118px, .9fr) minmax(138px, 1fr) minmax(100px, .7fr) 38px; }
+.dynamic-payment-row { grid-template-columns: minmax(145px, 1fr) 62px minmax(132px, 1fr) minmax(112px, .85fr) 82px minmax(96px, .72fr) 38px; }
+.dynamic-payment-row.is-special { grid-template-columns: minmax(180px, 1.25fr) 62px minmax(132px, 1fr) minmax(112px, .85fr) 82px minmax(96px, .72fr) 38px; }
 .payment-remove {
   width: 34px;
   height: 34px;
@@ -645,6 +647,7 @@ body.modal-open { overflow: hidden; }
   grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: 10px;
 }
+.review-finance-summary { grid-template-columns: repeat(4, minmax(0, 1fr)); }
 
 .review-details > div,
 .review-finance-summary > div {
@@ -692,6 +695,7 @@ body.modal-open { overflow: hidden; }
 .review-installments article > div { display: grid; gap: 3px; }
 .review-installments small { color: var(--muted); }
 .review-description { margin: 12px 0 0; color: var(--muted); line-height: 1.45; }
+.review-warning { margin: 13px 0 0; padding: 12px 14px; color: #7a4a00; background: #fff5dd; border: 1px solid #f0ce86; border-radius: 9px; line-height: 1.45; }
 
 .review-modal-actions {
   justify-content: flex-end;
@@ -830,6 +834,7 @@ body.modal-open { overflow: hidden; }
   .payment-toggle,
   .special-description { grid-column: 1 / -1; }
   .payment-total { grid-column: 1 / -1; text-align: left; }
+  .payment-percentage { grid-column: 1 / -1; text-align: left; }
   .payment-builder { grid-template-columns: 1fr; }
   .payment-builder small { grid-column: auto; }
   .payment-builder .button { width: 100%; }

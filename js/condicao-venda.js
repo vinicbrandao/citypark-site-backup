@@ -144,6 +144,13 @@
     }, 0);
   }
 
+  function percentageOfTable(totalCents, tableValueCents) {
+    const total = Number(totalCents);
+    const table = Number(tableValueCents);
+    if (!Number.isFinite(total) || !Number.isFinite(table) || table <= 0) return 0;
+    return Math.round((total / table) * 10000) / 100;
+  }
+
   return {
     MONTHLY_INSTALLMENTS,
     SEMIANNUAL_INSTALLMENTS,
@@ -152,6 +159,7 @@
     calculate,
     format,
     buildSchedule,
-    sumPaymentGroups
+    sumPaymentGroups,
+    percentageOfTable
   };
 });

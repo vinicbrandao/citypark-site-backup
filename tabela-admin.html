@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#071147">
+  <meta name="robots" content="noindex, nofollow">
+  <title>Tabela Administrativa | City Park</title>
+  <link rel="stylesheet" href="css/admin-shell.css?v=20260902-2">
+  <link rel="stylesheet" href="css/tabela-admin.css?v=20260903-3">
+  <link rel="icon" href="data:,">
+  <style>html:not(.page-authorized) body { visibility: hidden; }</style>
+</head>
+<body>
+  <header class="figma-topbar">
+    <a class="figma-brand" href="painel-admin.html" aria-label="Início do Ambiente Administrativo">
+      <img src="img/CityPark-Branco.png" alt="City Park">
+      <strong>Ambiente Administrativo</strong>
+    </a>
+    <a class="sales-link" href="vendas.html">Tabela de Vendas</a>
+  </header>
+
+  <nav class="admin-navigation" aria-label="Módulos administrativos">
+    <a href="painel-admin.html">Visão geral</a>
+    <a class="active" href="tabela-admin.html" aria-current="page">Tabela</a>
+    <a href="gestao-propostas.html">Propostas</a>
+    <button type="button" disabled aria-label="Corretores, módulo ainda não disponível">Corretores</button>
+  </nav>
+
+  <main class="unit-dashboard">
+    <header class="page-intro">
+      <div><h1>Disponibilidade das unidades</h1><p>Visualize a disponibilidade das unidades de cada torre e filtre rapidamente por tipologia.</p></div>
+      <p id="unitLastUpdated" class="page-updated-at">Atualizado em: —</p>
+    </header>
+
+    <section class="unit-metrics" aria-label="Resumo das unidades por status">
+      <article><span class="metric-mark total" aria-hidden="true">▦</span><div><h3>Total filtrado</h3><strong id="totalUnitCount">—</strong><span id="visibleUnitLabel">unidades</span></div></article>
+      <article><span class="metric-mark available" aria-hidden="true">✓</span><div><h3>Disponíveis</h3><strong id="availableCount">—</strong><span id="availablePercentage">—</span></div></article>
+      <article><span class="metric-mark reserved" aria-hidden="true">◷</span><div><h3>Reservadas</h3><strong id="reservedCount">—</strong><span id="reservedPercentage">—</span></div></article>
+      <article><span class="metric-mark sold" aria-hidden="true">●</span><div><h3>Vendidas</h3><strong id="soldCount">—</strong><span id="soldPercentage">—</span></div></article>
+    </section>
+
+    <section class="inventory-panel">
+      <div class="inventory-toolbar">
+        <div><h1>Unidades por torre</h1></div>
+        <div class="toolbar-actions">
+          <label class="filter-field" for="typologyFilter">
+            <h2 id="summaryTitle">Tipologia</h2>
+            <select id="typologyFilter">
+              <option value="all">Todas as tipologias</option>
+              <option value="3-quartos">3 quartos</option>
+              <option value="2-quartos">2 quartos</option>
+              <option value="studio">Studio</option>
+              <option value="quarto-sala">Quarto/Sala</option>
+              <option value="loft">Loft</option>
+            </select>
+          </label>
+          <ul class="status-legend" aria-label="Legenda de status">
+            <li><span data-tone="available"></span>Disponível</li>
+            <li><span data-tone="reserved"></span>Reservada</li>
+            <li><span data-tone="sold"></span>Vendida</li>
+          </ul>
+        </div>
+      </div>
+
+      <div id="unitLoading" class="unit-loading" role="status"><span></span>Carregando unidades…</div>
+      <div id="unitContent" class="tower-grid" hidden>
+        <section class="tower-section" aria-labelledby="towerATitle">
+          <div class="tower-heading"><div><h2 id="towerATitle">Torre Libert A</h2></div></div>
+          <div id="towerAUnits" class="unit-grid"></div>
+        </section>
+        <section class="tower-section" aria-labelledby="towerBTitle">
+          <div class="tower-heading"><div><h2 id="towerBTitle">Torre Libert B</h2></div></div>
+          <div id="towerBUnits" class="unit-grid"></div>
+        </section>
+      </div>
+      <div id="unitEmpty" class="unit-empty" hidden><span aria-hidden="true">⌕</span><strong>Nenhuma unidade encontrada</strong><p>Selecione outra tipologia para continuar.</p></div>
+    </section>
+  </main>
+
+  <div id="adminToast" class="admin-toast" role="status" aria-live="polite"></div>
+  <script type="module" src="js/tabela-admin.js?v=20260903-1"></script>
+</body>
+</html>
