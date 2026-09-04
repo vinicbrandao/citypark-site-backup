@@ -40,7 +40,7 @@ body.modal-open { overflow: hidden; }
 .detail-content { min-width: 0; }
 .detail-section { margin-bottom: 20px; padding: clamp(20px,2.3vw,30px); background: #fff; border: 1px solid var(--admin-line); border-radius: 18px; box-shadow: 0 10px 30px rgba(16,24,40,.045); }
 .section-heading { margin-bottom: 22px; }
-.section-heading h2, .condition-heading h2 { margin: 0; font-size: clamp(1.4rem,2vw,1.75rem); line-height: 1.2; letter-spacing: -.025em; }
+.section-heading h2, .condition-heading h2, .counterproposal-heading h3 { margin: 0; font-size: clamp(1.4rem,2vw,1.75rem); line-height: 1.2; letter-spacing: -.025em; }
 .section-heading p { margin: 8px 0 0; color: #667180; font-size: .875rem; line-height: 1.5; }
 #expiryText { font-size: .75rem; font-weight: 700; }
 .action-heading { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 18px; }
@@ -54,6 +54,10 @@ body.modal-open { overflow: hidden; }
 .secondary-button:hover:not(:disabled) { background: #f4f6fa; }
 .danger-button:hover:not(:disabled) { background: #fbe9e9; }
 .detail-content button:disabled, .modal button:disabled { opacity: .5; cursor: not-allowed; }
+.cancellation-section { border-color: #e9bcbc; }
+.cancellation-heading { margin-bottom: 0; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 18px; }
+.cancellation-heading p { max-width: 720px; }
+.cancellation-notice { margin: 20px 0 0; padding-top: 18px; color: #667180; border-top: 1px solid #e9bcbc; font-size: .875rem; line-height: 1.5; }
 
 /* Situação sem cápsulas; as cores identificam o estado já calculado pela aplicação. */
 .reservation-card { padding: 0; }
@@ -82,26 +86,26 @@ body.modal-open { overflow: hidden; }
 
 /* Resumo e parcelas: valores em destaque, linhas de separação mais definidas. */
 .condition-heading { margin-bottom: 22px; display: flex; align-items: center; flex-wrap: wrap; gap: 12px; }
-.condition-heading > span:not(.validation-badge) { color: var(--admin-blue); font-size: .875rem; font-weight: 800; }
+.condition-heading > span:not(.validation-badge) { min-height: 36px; padding: 7px 11px; display: inline-flex; align-items: center; color: #3447a8; background: transparent; border: 1px solid var(--admin-blue); border-radius: 10px; font-size: 1rem; font-weight: 700; line-height: 1.25; letter-spacing: -.01em; }
 .validation-badge { margin-left: auto; color: #176344; font-size: .75rem; font-weight: 700; }
 .validation-badge.invalid { color: #a53333; }
 .finance-totals { margin-bottom: 18px; display: grid; grid-template-columns: repeat(4,minmax(0,1fr)); gap: 12px; }
 .finance-totals > div { min-width: 0; padding: 16px 14px; background: #f8f9fc; border: 1px solid var(--admin-line); border-radius: 12px; }
-.finance-totals span { display: block; color: #667180; font-size: .75rem; font-weight: 700; line-height: 1.4; }
-.finance-totals strong { margin-top: 8px; display: block; color: var(--admin-ink); font-size: clamp(1.125rem,1.6vw,1.375rem); font-weight: 800; line-height: 1.3; letter-spacing: -.025em; font-variant-numeric: tabular-nums; overflow-wrap: anywhere; }
+.finance-totals span { display: block; color: #505a69; font-size: .875rem; font-weight: 700; line-height: 1.4; }
+.finance-totals strong { margin-top: 8px; display: block; color: var(--admin-ink); font-size: clamp(1.25rem,1.8vw,1.5rem); font-weight: 800; line-height: 1.3; letter-spacing: -.025em; font-variant-numeric: tabular-nums; overflow-wrap: anywhere; }
 .finance-totals .unbalanced { border-color: #e9bcbc; background: #fff8f8; }
 .finance-totals .unbalanced strong { color: #a53333; }
 .finance-table-wrap { width: 100%; overflow-x: auto; border: 1px solid var(--admin-line); border-radius: 12px; }
 .finance-table { width: 100%; min-width: 760px; border-collapse: collapse; table-layout: fixed; }
-.finance-table th { height: 50px; padding: 12px 10px; color: #505a69; background: #f4f6f9; border-bottom: 2px solid #d9dee7; font-size: .75rem; font-weight: 800; line-height: 1.4; text-align: center; }
+.finance-table th { height: 50px; padding: 12px 10px; color: var(--admin-ink); background: #f4f6f9; border-bottom: 2px solid #d9dee7; font-size: .875rem; font-weight: 800; line-height: 1.4; text-align: center; }
 .finance-table th:nth-child(1) { width: 19%; }
 .finance-table th:nth-child(2) { width: 8%; }
 .finance-table th:nth-child(3) { width: 22%; }
 .finance-table th:nth-child(4) { width: 21%; }
 .finance-table th:nth-child(5) { width: 17%; }
 .finance-table th:nth-child(6) { width: 13%; }
-.finance-table td { height: 58px; padding: 10px; color: var(--admin-ink); background: #fff; border-bottom: 2px solid #dde2ea; font-size: .875rem; font-weight: 600; line-height: 1.4; text-align: center; font-variant-numeric: tabular-nums; }
-.finance-table td[rowspan] { color: var(--admin-blue); font-weight: 800; }
+.finance-table td { height: 58px; padding: 10px; color: var(--admin-ink); background: #fff; border-bottom: 2px solid #dde2ea; font-size: 1rem; font-weight: 600; line-height: 1.4; text-align: center; font-variant-numeric: tabular-nums; }
+.finance-table td[rowspan], .counter-table-wrap .finance-table td:first-child { color: #000; font-size: 1rem; font-weight: 800; }
 .finance-table tbody tr:hover td { background: #fafbff; }
 .edit-finance-button { width: 40px; height: 40px; padding: 0; color: var(--admin-blue); background: transparent; border: 1px solid #d8dde6; border-radius: 9px; font-size: 1.375rem; cursor: pointer; }
 .edit-finance-button:hover:not(:disabled) { background: #eef1ff; }
@@ -113,20 +117,21 @@ body.modal-open { overflow: hidden; }
 .counterproposal-trigger:hover:not(:disabled) { background: #e3e8ff; }
 .counterproposal-builder, .counterproposal-display { margin-top: 20px; padding: 22px; background: #f8f9fc; border: 1px solid #d8dde6; border-radius: 14px; }
 .counterproposal-heading, .counterproposal-title { display: flex; align-items: flex-start; justify-content: space-between; gap: 16px; }
-.counterproposal-heading h3, .counterproposal-title > div > span { margin: 0; display: block; font-size: 1.375rem; font-weight: 800; line-height: 1.3; }
+.counterproposal-title > div > span { margin: 0; display: block; font-size: 1.375rem; font-weight: 800; line-height: 1.3; }
 .counterproposal-heading p, .counterproposal-title > div > strong { margin: 8px 0 0; display: block; color: #667180; font-size: .8125rem; line-height: 1.5; }
+.counterproposal-heading p { color: #505a69; font-size: 1rem; }
 .counterproposal-heading > button, .modal-close { width: 40px; height: 40px; flex-shrink: 0; color: #505a69; background: #edf0f4; border: 0; border-radius: 9px; font-size: 1.5rem; cursor: pointer; }
-.counterproposal-summary { margin: 20px 0; display: grid; grid-template-columns: repeat(3,minmax(0,1fr)); gap: 12px; }
-.counterproposal-summary > span { padding: 14px; display: grid; gap: 8px; color: #667180; background: #fff; border: 1px solid var(--admin-line); border-radius: 10px; font-size: .75rem; font-weight: 600; }
-.counterproposal-summary strong { color: var(--admin-ink); font-size: 1rem; overflow-wrap: anywhere; }
-.counterproposal-rows { display: grid; gap: 14px; margin-bottom: 16px; }
-.counterproposal-row { padding: 16px; display: grid; grid-template-columns: minmax(140px,1.2fr) minmax(85px,.65fr) minmax(150px,1fr) minmax(130px,1fr); align-items: end; gap: 14px; background: #fff; border: 1px solid #d8dde6; border-radius: 12px; }
-.counterproposal-row label, .edit-grid label, .reason-field { min-width: 0; display: grid; gap: 7px; }
+.counterproposal-summary { margin: 20px 0; }
+.counterproposal-rows { display: grid; gap: 14px; margin-bottom: 16px; overflow-x: auto; }
+.counterproposal-row { min-width: 900px; padding: 16px; display: grid; grid-template-columns: minmax(180px,1.4fr) minmax(95px,.65fr) minmax(160px,1fr) minmax(140px,1fr) minmax(110px,.75fr) 44px; align-items: end; gap: 12px; background: #fff; border: 1px solid #d8dde6; border-radius: 12px; }
+.counterproposal-row label, .counter-percentage-field, .edit-grid label, .reason-field { min-width: 0; display: grid; gap: 7px; }
 .counterproposal-row label > span, .edit-grid label > span, .reason-field > span { color: #505a69; font-size: .875rem; font-weight: 700; line-height: 1.35; }
 .counterproposal-row input, .counterproposal-row select, .edit-grid input, .reason-field textarea { width: 100%; min-width: 0; min-height: 44px; padding: 10px; color: var(--admin-ink); background: #f8f9fc; border: 1px solid #d8dde6; border-radius: 9px; font-size: 1rem; }
+.counterproposal-row label > span, .counter-percentage-field > span { color: var(--admin-ink); font-size: .875rem; font-weight: 800; line-height: 1.4; }
+.counterproposal-row input, .counterproposal-row select, .counter-row-percentage { height: 44px; font-family: inherit; font-size: 1rem; font-weight: 600; line-height: 1.4; font-variant-numeric: tabular-nums; }
 .reason-field textarea { resize: vertical; }
-.counter-row-percentage { grid-column: 1 / 4; align-self: center; color: var(--admin-blue); font-size: .875rem; font-weight: 800; text-align: right; }
-.counterproposal-row > button { width: 40px; height: 40px; justify-self: end; border: 0; border-radius: 9px; color: #9e3434; background: #fbe9e9; font-size: 1.5rem; cursor: pointer; }
+.counter-row-percentage { padding: 10px; display: flex; align-items: center; justify-content: center; color: #000; background: #f8f9fc; border: 1px solid #d8dde6; border-radius: 9px; }
+.counterproposal-row > button { width: 44px; height: 44px; justify-self: end; display: grid; place-items: center; border: 0; border-radius: 9px; color: #9e3434; background: #fbe9e9; font-size: 1.5rem; cursor: pointer; }
 .counterproposal-actions, .modal-actions { margin-top: 20px; display: flex; justify-content: flex-end; flex-wrap: wrap; gap: 10px; }
 .counterproposal-title { margin-bottom: 18px; flex-wrap: wrap; }
 .pending-counter { color: #8a5b00; font-size: .8125rem; font-weight: 800; }
@@ -134,7 +139,8 @@ body.modal-open { overflow: hidden; }
 .counter-table-wrap .finance-table th:nth-child(1) { width: 24%; }
 .counter-table-wrap .finance-table th:nth-child(2) { width: 10%; }
 .counter-table-wrap .finance-table th:nth-child(3), .counter-table-wrap .finance-table th:nth-child(4), .counter-table-wrap .finance-table th:nth-child(5) { width: 22%; }
-.confirm-counterproposal { display: block; margin-left: auto; }
+.counterproposal-decision-actions { display: flex; justify-content: flex-end; flex-wrap: wrap; gap: 10px; }
+.confirm-counterproposal { background: var(--admin-navy); }
 
 /* Histórico e estados auxiliares. */
 .history-timeline { display: grid; gap: 14px; }
@@ -162,8 +168,6 @@ body.modal-open { overflow: hidden; }
 
 @media (max-width: 1280px) {
   .finance-totals { grid-template-columns: repeat(2,minmax(0,1fr)); }
-  .counterproposal-row { grid-template-columns: repeat(2,minmax(0,1fr)); }
-  .counter-row-percentage { grid-column: 1; text-align: left; }
 }
 @media (max-width: 980px) {
   html { scroll-padding-top: calc(var(--proposal-summary-height,72px) + 85px); }
@@ -179,6 +183,7 @@ body.modal-open { overflow: hidden; }
   .anchor-sidebar a { padding: 9px; font-size: .8125rem; }
   .detail-section { padding: 20px 16px; }
   .action-heading { align-items: flex-start; }
+  .cancellation-heading > div, .cancellation-heading > button { width: 100%; }
   .proposal-actions { width: 100%; }
   .proposal-actions button { flex: 1; }
   .data-tabs { gap: 4px; }
@@ -187,15 +192,12 @@ body.modal-open { overflow: hidden; }
   .condition-heading .validation-badge { margin-left: 0; flex-basis: 100%; }
   .finance-totals > div { padding: 12px 10px; }
   .counterproposal-builder, .counterproposal-display { padding: 16px; }
-  .counterproposal-summary { grid-template-columns: minmax(0,1fr); }
   .counterproposal-actions { flex-direction: column-reverse; }
-  .counterproposal-actions button, .confirm-counterproposal { width: 100%; }
+  .counterproposal-actions button, .counterproposal-decision-actions button { width: 100%; }
 }
 @media (max-width: 480px) {
   .finance-totals { grid-template-columns: minmax(0,1fr); }
-  .counterproposal-row, .edit-grid { grid-template-columns: minmax(0,1fr); }
-  .counter-row-percentage, .counterproposal-row > button { grid-column: 1; }
-  .counterproposal-row > button { justify-self: start; }
+  .edit-grid { grid-template-columns: minmax(0,1fr); }
   .modal { padding: 12px; }
   .modal-card { padding: 22px; max-height: calc(100dvh - 24px); }
   .modal-actions > button { flex: 1; }

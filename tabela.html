@@ -36,6 +36,7 @@
     .btn{padding:.6rem .9rem;border-radius:8px;border:1px solid #d6d6d6;background:#fff;cursor:pointer}
     #statusFilter{min-width:180px}
     .badge{font-size:.875rem;color:#666}
+    .badge-financiamento{font-size:.675rem;color:#666;}
     @media (max-width:700px){
       .topbar{align-items:flex-start;flex-direction:column}
       .topbar-actions{width:100%;justify-content:flex-start}
@@ -64,9 +65,9 @@
 
     /* Larguras consistentes por coluna */
     col.c1{width:9%}  /* Unidade  */
-    col.c2{width:10%}  /* Tipologia*/
+    col.c2{width:13%}  /* Tipologia*/
     col.c3{width:9%}  /* Área     */
-    col.c4{width:13%}  /* Preço    */
+    col.c4{width:15%}  /* Preço    */
     col.c5{width:11%}  /* Sinal    */
     col.c6{width:11%}  /* 40 parc. */
     col.c7{width:11%}  /* 6 inter */
@@ -101,11 +102,6 @@
     .brandbar .subtitle{
       font-size:14px;color:#555;line-height:1.35
     }
-    .brandbar .subtitle-dois{
-      font-size: 10px;
-      color: #555;
-      line-height: 1.35;
-    }
 
     /* Status colorido */
     .status{font-weight:600}
@@ -116,7 +112,7 @@
     position:relative;
     display:inline-flex;
     align-items:center;
-    width:200px;
+    width: 200px;
     height:38px;
   }
 
@@ -160,11 +156,26 @@
   .print-btn i{
     font-size:14px;
   }
+
+  .financing-footer td{
+    padding:5px 0 2px;
+    border:0;
+    background:#fff;
+    color:#666;
+    font-size:.875rem;
+    font-weight:normal;
+    line-height:1.3;
+    text-align:left;
+  }
   
 
     /* ===== IMPRESSÃO ===== */
     @media print{
-      @page{ size:A4 portrait; margin:8mm 8mm 10mm 8mm; }
+      @page{ 
+        size:A4 portrait; 
+        margin:8mm 8mm 18mm 8mm; 
+      }
+
       html,body{ margin:0;padding:0; -webkit-print-color-adjust:exact; print-color-adjust:exact; background:#fff !important; }
       .wrap{ margin:0; padding:0; }
       /* não mostra topo e header, mas mantém o carimbo */
@@ -180,7 +191,19 @@
 
 
       thead{ display:table-header-group; }
-      tfoot{ display:table-footer-group; }
+      .financing-footer{ display:table-footer-group; }
+
+      .financing-footer td{
+        padding:5px 0 2px !important;
+        border:0;
+        background:#fff;
+        color:#444;
+        font-family:inherit;
+        font-size:10px;
+        font-weight:normal;
+        line-height:1.3;
+        text-align:left !important;
+      }
 
       table.tv{ border-radius:0; font-size:11px; }
       table.tv th, table.tv td{ padding:6px 8px; }
@@ -189,7 +212,7 @@
       .brandbar .left img,
       .brandbar .right img{ height:28px }
       .brandbar h1{ font-size:18px;margin:0 0 2px }
-      .brandbar .subtitle{ font-size:11px;  }
+      .brandbar .subtitle{ font-size:11px }
     }
   </style>
 </head>
@@ -233,7 +256,6 @@
     </div>
 
     <div class="badge" id="stamp">Carregando…</div>
-
     <div class="table-area">
       <table id="tv" class="tv">
         <!-- Larguras fixas por coluna -->
@@ -257,14 +279,11 @@
                     Prazo de entrega: Dezembro/2029<br>
                     Localização: Complexo Parque Shopping Maceió
                   </div>
-                  <!-- Ver a posição com Camilla! -->
-                  <!-- <div class="subtitle-dois">
-                    O valor do financiamento poderá ser realizado com instituição bancária ou diretamente com a construtora (a consultar).
-                  </div> -->
                 </div>
                 <div class="right">
                   <!-- Atualize o caminho da logo City Park -->
                   <img src="img/logo.png" alt="City Park">
+                  <!-- Comentario teste-->
                 </div>
               </div>
             </th>
@@ -277,20 +296,27 @@
             <th>Área (m²)</th>
             <th>Preço à vista</th>
             <th>Sinal</th>
-            <th>40 parc. mensais</th>
-            <th>6 intercal. semestrais</th>
-            <th>Chaves/Financiamento</th>
+            <th id="headerParcelasMensais">40 parc. mensais</th>
+            <th id="headerIntercaladas">6 intercal. semestrais</th>
+            <th>*Chaves/Financiamento</th>
             <th>Status</th>
           </tr>
         </thead>
 
         <tbody id="tvBody"><!-- linhas via JS --></tbody>
+        <tfoot class="financing-footer">
+          <tr>
+            <td colspan="9">
+              *O valor do financiamento poderá ser realizado com instituição bancária ou diretamente com a construtora (a consultar).
+            </td>
+          </tr>
+        </tfoot>
       </table>
     </div>
   </main>
 
   <script type="module" src="js/guard-aprovado.js"></script>
-  <script src="js/condicao-venda.js?v=20260817-2"></script>
+  <script src="js/condicao-venda.js?v=20260904-1"></script>
   <script src="js/tabela.js?v=20260817-2" defer></script>
 </body>
 </html>

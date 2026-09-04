@@ -108,7 +108,7 @@ function unitTower(unit) {
   return "A";
 }
 function unitNumber(unit) { return Number(String(unit.unidade || unit.numero || unit.id).match(/\d+/)?.[0] || 0); }
-function sortUnits(a, b) { return unitNumber(b) - unitNumber(a) || String(a.unidade || a.id).localeCompare(String(b.unidade || b.id), "pt-BR", { numeric: true }); }
+function sortUnits(a, b) { return unitNumber(a) - unitNumber(b) || String(a.unidade || a.id).localeCompare(String(b.unidade || b.id), "pt-BR", { numeric: true }); }
 function normalize(value) { return String(value || "").normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase().trim(); }
 function escapeHtml(value) { return String(value ?? "").replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;").replace(/'/g, "&#039;"); }
 function showToast(message, isError = false) {

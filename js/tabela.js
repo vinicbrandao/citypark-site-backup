@@ -10,6 +10,8 @@
   const tbody = $('#tvBody');
   const stamp = $('#stamp');
   const statusFilter = $('#statusFilter');
+  const headerParcelasMensais = $('#headerParcelasMensais');
+  const headerIntercaladas = $('#headerIntercaladas');
   const paymentPlan = window.CityParkPaymentPlan;
 
   let allRows = [];
@@ -101,16 +103,28 @@
       const area      = pick(r, ['ÁREA', 'AREA', 'Área', 'area']);
       const preco     = pick(r, ['PREÇO À VISTA', 'PRECO À VISTA', 'Preço', 'Preco', 'preco']);
       const sinal     = pick(r, ['SINAL', 'Sinal', 'sinal']);
-      const parc40    = pick(r, ['40 PARC. MENSAIS', '40 PARC MENSAIS', '40 PARC', '40 parcelas', '40 PARCELAS']);
-      const inter6    = pick(r, ['6 INTERCAL. SEMESTRAIS', '6 INTERCAL SEMESTRAIS', '6 INTERCALADAS']);
+      const parcelaMensal = pick(r, [
+        'PARCELA MENSAL',
+        '40 PARC. MENSAIS',
+        '40 PARC MENSAIS',
+        '40 PARC',
+        '40 parcelas',
+        '40 PARCELAS'
+      ]);
+      const intercalada = pick(r, [
+        'INTERCALADA',
+        '6 INTERCAL. SEMESTRAIS',
+        '6 INTERCAL SEMESTRAIS',
+        '6 INTERCALADAS'
+      ]);
       const chaves    = pick(r, ['CHAVES', 'Chaves', 'chaves']);
       const status    = pick(r, ['STATUS', 'Status', 'status']);
 
       const condition = paymentPlan.format({
         price: preco,
         downPayment: sinal,
-        monthlyInstallment: parc40,
-        semiannualInstallment: inter6,
+        monthlyInstallment: parcelaMensal,
+        semiannualInstallment: intercalada,
         keys: chaves
       });
 
@@ -140,6 +154,39 @@
     stamp.textContent = `Atualizado agora: ${new Date().toLocaleString('pt-BR')}`;
   }
 
+  async function loadConditions() {
+    try {
+      const url = `${WEBAPP_URL}?resource=conditions`;
+
+      const res = await fetch(url, {
+        cache: 'no-store',
+        credentials: 'omit'
+      });
+
+      if (!res.ok) {
+        throw new Error(`${res.status} ${res.statusText}`);
+      }
+
+      const data = await res.json();
+
+      const parcelasMensais = Number(data.parcelasMensais);
+      const intercaladas = Number(data.intercaladas);
+
+      if (Number.isFinite(parcelasMensais) && headerParcelasMensais) {
+        headerParcelasMensais.textContent =
+          `${parcelasMensais} parc. mensais`;
+      }
+
+      if (Number.isFinite(intercaladas) && headerIntercaladas) {
+        headerIntercaladas.textContent =
+          `${intercaladas} intercal. semestrais`;
+      }
+
+    } catch (e) {
+      // A tabela continua funcionando com o texto fallback do HTML.
+      console.warn('[tabela] não foi possível carregar as condições:', e);
+    }
+  }
   async function load() {
     try {
       stamp.textContent = 'Carregando dados…';
@@ -166,5 +213,6 @@
   statusFilter?.addEventListener('change', applyFilter);
   $('#btnPrint')?.addEventListener('click', () => window.print());
 
+  loadConditions();
   load();
 })();

@@ -75,29 +75,23 @@
   }
 
   function format(values) {
-    const calculation = calculate(values);
-
-    if (!calculation) {
-      return {
-        price: formatOriginal(values.price),
-        downPayment: formatOriginal(values.downPayment),
-        monthlyInstallment: formatOriginal(values.monthlyInstallment),
-        semiannualInstallment: formatOriginal(values.semiannualInstallment),
-        keys: formatOriginal(values.keys),
-        balanced: false
-      };
-    }
-
+    // A Tabela de Vendas no Google Sheets passa a ser a fonte oficial dos
+    // valores da condição comercial. O site apenas formata e exibe os dados.
+    //
+    // Mantemos calculate() e as constantes 40/6 exportadas temporariamente
+    // por compatibilidade com qualquer código legado, mas format() NÃO usa
+    // mais esses valores para recalcular Chaves/Financiamento.
     return {
-      price: formatMoney(calculation.priceCents),
-      downPayment: formatMoney(calculation.downPaymentCents),
-      monthlyInstallment: formatMoney(calculation.monthlyInstallmentCents),
-      semiannualInstallment: formatMoney(calculation.semiannualInstallmentCents),
-      keys: formatMoney(calculation.keysCents),
-      balanced: calculation.totalCents === calculation.priceCents
+      price: formatOriginal(values.price),
+      downPayment: formatOriginal(values.downPayment),
+      monthlyInstallment: formatOriginal(values.monthlyInstallment),
+      semiannualInstallment: formatOriginal(values.semiannualInstallment),
+      keys: formatOriginal(values.keys),
+      balanced: null
     };
   }
 
+  // Utilitários dos formulários; não alteram os valores exibidos por format().
   function paymentIntervalMonths(periodicity) {
     return {
       mensal: 1,
