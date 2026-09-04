@@ -3,53 +3,69 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="theme-color" content="#091253">
+  <meta name="theme-color" content="#071147">
   <meta name="robots" content="noindex, nofollow">
   <title>Detalhamento da Proposta | City Park</title>
-  <link rel="stylesheet" href="css/detalhes-proposta.css?v=20260824-3">
+  <link rel="stylesheet" href="css/admin-shell.css?v=20260902-2">
+  <link rel="stylesheet" href="css/detalhes-proposta.css?v=20260904-4">
   <link rel="icon" href="data:,">
   <style>html:not(.page-authorized) body { visibility: hidden; }</style>
 </head>
 <body>
   <header class="figma-topbar">
-    <a class="figma-brand" href="painel-admin.html" aria-label="Início do Ambiente Administrativo"><img src="img/CityPark-Branco.png" alt="City Park"></a>
+    <a class="figma-brand" href="painel-admin.html" aria-label="Início do Ambiente Administrativo">
+      <img src="img/CityPark-Branco.png" alt="City Park">
+      <strong>Ambiente Administrativo</strong>
+    </a>
     <a class="sales-link" href="vendas.html">Tabela de Vendas</a>
     <button id="btnSair" class="hidden-control" type="button">Sair</button>
   </header>
+
+  <nav class="admin-navigation" aria-label="Módulos administrativos">
+    <a href="painel-admin.html">Visão geral</a>
+    <a href="tabela-admin.html">Tabela</a>
+    <a class="active" href="gestao-propostas.html" aria-current="page">Propostas</a>
+    <button type="button" disabled aria-label="Corretores, módulo ainda não disponível">Corretores</button>
+  </nav>
 
   <div id="loadingState" class="loading-state" role="status" aria-live="polite"><span class="spinner" aria-hidden="true"></span><p>Carregando proposta…</p></div>
 
   <main id="proposalApp" hidden>
     <header class="proposal-summary">
-      <div class="summary-primary"><p>Proposta: <strong id="summaryProposalId">—</strong></p><span>Data de Abertura: <strong id="summaryCreatedAt">—</strong></span></div>
+      <div class="summary-inner">
+      <div class="summary-primary"><p>Proposta: <strong id="summaryProposalId">—</strong></p><span>Abertura: <strong id="summaryCreatedAt">—</strong></span></div>
       <dl class="summary-meta">
         <div><dt>Unidade:</dt><dd id="summaryUnit">—</dd></div>
         <div><dt>Corretor:</dt><dd id="summaryBroker">—</dd><small id="summaryCreci">—</small></div>
         <div><dt>Cliente:</dt><dd id="summaryClient">—</dd><small id="summaryDocument">—</small></div>
       </dl>
-      <a class="summary-back" href="gestao-propostas.html">Voltar</a>
+      <div class="summary-actions">
+        <a class="summary-back" href="gestao-propostas.html">Voltar</a>
+      </div>
+      </div>
     </header>
 
     <div class="detail-shell">
       <aside class="anchor-sidebar">
         <p class="sr-only">Navegação</p>
         <nav aria-label="Seções da proposta">
-          <a class="active" href="#informacoes">Informações</a><a href="#documentos">Documentos</a><a href="#contratos">Contratos</a><a href="#historico">Histórico</a>
+          <a class="active" href="#situacao-reserva">Situação da Reserva</a><a href="#dados-gerais">Dados Gerais</a><a href="#condicao-proposta">Condição de Proposta</a><a href="#historico">Histórico</a>
         </nav>
       </aside>
 
       <div class="detail-content">
-        <section id="informacoes" class="detail-section section-information">
+        <section id="situacao-reserva" class="detail-section section-information">
           <div class="section-heading action-heading">
-            <div><h2>Informações:</h2></div>
+            <div><h2>Situação da Reserva</h2><p id="expiryText">—</p></div>
             <div id="proposalActions" class="proposal-actions" hidden><button id="rejectProposal" class="danger-button" type="button">Recusar proposta</button><button id="approveProposal" class="success-button" type="button">Aprovar proposta</button></div>
           </div>
-
-          <article class="reservation-card">
-            <div class="reservation-heading"><div><h3>Situação da reserva</h3><p id="expiryText">—</p></div><span id="proposalStatus" class="status-badge">—</span></div>
+          <article class="reservation-card"><span id="proposalStatus" class="status-badge">—</span>
             <div id="reservationTags" class="tag-list" aria-label="Etapas da reserva"></div>
           </article>
+        </section>
 
+        <section id="dados-gerais" class="detail-section">
+          <div class="section-heading"><h2>Dados Gerais</h2></div>
           <article class="general-data-card">
             <div class="data-tabs" role="tablist" aria-label="Dados gerais">
               <button id="brokerTab" class="active" type="button" role="tab" aria-selected="true" aria-controls="brokerPanel">Dados do corretor</button>
@@ -58,29 +74,44 @@
             <div id="brokerPanel" class="data-panel" role="tabpanel" aria-labelledby="brokerTab"><dl id="brokerInformation"></dl></div>
             <div id="clientPanel" class="data-panel" role="tabpanel" aria-labelledby="clientTab" hidden><dl id="clientInformation"></dl></div>
           </article>
+        </section>
 
+        <section id="condicao-proposta" class="detail-section">
           <article class="finance-card">
-            <div class="condition-heading"><h3>Condição de Proposta:</h3><span id="financeConditionType">—</span><span class="condition-or">ou</span><span id="financeAlternative" class="condition-alternative">Padrão</span><span id="financeValidation" class="validation-badge">—</span></div>
+            <div class="condition-heading"><h2>Condição de Proposta:</h2><span id="financeConditionType">—</span><span id="financeValidation" class="validation-badge">—</span></div>
             <div class="finance-totals">
-              <div><span>Valor da tabela</span><strong id="financeTableValue">—</strong></div><div><span>Total preenchido</span><strong id="financeProposalValue">—</strong></div><div id="financeDifferenceCard"><span>Diferença</span><strong id="financeDifference">—</strong></div>
+              <div><span>Valor da tabela</span><strong id="financeTableValue">—</strong></div><div><span>Total preenchido</span><strong id="financeProposalValue">—</strong></div><div id="financeDifferenceCard"><span>Diferença</span><strong id="financeDifference">—</strong></div><div><span>Porcentagem total</span><strong id="financePercentage">—</strong></div>
             </div>
-            <div class="finance-table-wrap"><table class="finance-table"><thead><tr><th>Parcelas</th><th>Qtd.</th><th>Valor</th><th>Data de vencimento</th><th>Opções</th></tr></thead><tbody id="financeRows"></tbody></table></div>
+            <div class="finance-table-wrap"><table class="finance-table"><thead><tr><th>Parcelas</th><th>Qtd.</th><th>Data de vencimento</th><th>Valor</th><th>Porcentagem</th><th>Opções</th></tr></thead><tbody id="financeRows"></tbody></table></div>
           </article>
-        </section>
-
-        <section id="documentos" class="detail-section">
-          <div class="section-heading"><p class="eyebrow">Módulo reservado</p><h2>Documentos</h2><p>Espaço preparado para a próxima etapa do projeto.</p></div>
-          <article class="empty-module"><span class="file-icon" aria-hidden="true">▱</span><strong>Anexar Arquivos</strong><small>Módulo reservado</small></article>
-        </section>
-
-        <section id="contratos" class="detail-section">
-          <div class="section-heading"><p class="eyebrow">Módulo reservado</p><h2>Contratos</h2><p>Espaço preparado para a próxima etapa do projeto.</p></div>
-          <article class="empty-module"><span class="file-icon" aria-hidden="true">▱</span><strong>Jurídico</strong><small>Módulo reservado</small></article>
+          <button id="openCounterproposal" class="counterproposal-trigger" type="button"><span aria-hidden="true">＋</span> Fazer uma Contraproposta</button>
+          <form id="counterproposalForm" class="counterproposal-builder" hidden>
+            <div class="counterproposal-heading"><div><h3 id="counterproposalFormTitle">Nova Contraproposta</h3><p id="counterproposalFormDescription">Crie uma condição alternativa. A proposta original só será substituída após a confirmação.</p></div><button id="closeCounterproposal" type="button" aria-label="Fechar">×</button></div>
+            <div class="finance-totals counterproposal-summary">
+              <div><span>Valor da tabela</span><strong id="counterTableValue">—</strong></div>
+              <div><span>Total preenchido</span><strong id="counterTotalValue">R$ 0,00</strong></div>
+              <div id="counterDifferenceCard"><span>Diferença</span><strong id="counterDifference">—</strong></div>
+              <div><span>Porcentagem total</span><strong id="counterPercentage">0%</strong></div>
+            </div>
+            <div id="counterproposalRows" class="counterproposal-rows"></div>
+            <button id="addCounterproposalRow" class="secondary-button" type="button">+ Adicionar parcela</button>
+            <p id="counterproposalError" class="form-error" hidden></p>
+            <div class="counterproposal-actions"><button class="secondary-button" type="button" id="cancelCounterproposal">Cancelar</button><button id="saveCounterproposal" class="primary-button" type="submit">Salvar contraproposta</button></div>
+          </form>
+          <div id="counterproposalDisplay" class="counterproposal-display" hidden></div>
         </section>
 
         <section id="historico" class="detail-section">
-          <div class="section-heading"><p class="eyebrow">Rastreabilidade</p><h2>Histórico</h2><p>Registro das alterações realizadas desde a criação da proposta.</p></div>
+          <div class="section-heading"><h2>Histórico</h2><p>Registro das alterações realizadas desde a criação da proposta.</p></div>
           <div id="historyTimeline" class="history-timeline" aria-live="polite"></div>
+        </section>
+
+        <section id="cancelamento-proposta" class="detail-section cancellation-section" hidden>
+          <div class="section-heading cancellation-heading">
+            <div><h2>Cancelamento da proposta</h2><p>Encerre esta proposta aprovada e devolva a unidade ao estoque disponível.</p></div>
+            <button id="cancelApprovedProposal" class="danger-button" type="button">Cancelar proposta</button>
+          </div>
+          <p class="cancellation-notice">O motivo e as alterações de status serão registrados no histórico da proposta.</p>
         </section>
       </div>
     </div>
@@ -90,14 +121,14 @@
     <div class="modal-card">
       <button class="modal-close" type="button" data-close-modal aria-label="Fechar">×</button><span id="confirmationIcon" class="modal-icon" aria-hidden="true">?</span>
       <h2 id="confirmationTitle">Confirmar ação</h2><p id="confirmationText">—</p>
-      <label id="rejectionReasonField" class="reason-field" hidden><span>Motivo da recusa</span><textarea id="rejectionReason" rows="4" maxlength="1000" placeholder="Informe o motivo para o histórico da proposta"></textarea><small id="rejectionReasonError" hidden>Informe o motivo da recusa.</small></label>
+      <label id="rejectionReasonField" class="reason-field" hidden><span id="actionReasonLabel">Motivo da ação</span><textarea id="rejectionReason" rows="4" maxlength="1000" placeholder="Informe o motivo para o histórico da proposta"></textarea><small id="rejectionReasonError" hidden>Informe o motivo para continuar.</small></label>
       <div class="modal-actions"><button class="secondary-button" type="button" data-close-modal>Cancelar</button><button id="confirmAction" class="primary-button" type="button">Confirmar</button></div>
     </div>
   </div>
 
   <div id="financeModal" class="modal" role="dialog" aria-modal="true" aria-labelledby="financeModalTitle" hidden>
     <form id="financeEditForm" class="modal-card finance-modal-card">
-      <button class="modal-close" type="button" data-close-finance aria-label="Fechar">×</button><p class="eyebrow">Condição de pagamento</p><h2 id="financeModalTitle">Editar parcela</h2><p>A alteração ficará registrada no histórico da proposta.</p>
+      <button class="modal-close" type="button" data-close-finance aria-label="Fechar">×</button><h2 id="financeModalTitle">Editar parcela</h2><p>A alteração ficará registrada no histórico da proposta.</p>
       <div class="edit-grid">
         <label class="full-field"><span>Descrição</span><input id="editDescription" type="text" maxlength="100" required></label>
         <label><span>Quantidade</span><input id="editQuantity" type="number" min="1" max="120" required></label>
@@ -110,6 +141,6 @@
   </div>
 
   <div id="toast" class="toast" role="status" aria-live="polite"></div>
-  <script src="js/condicao-venda.js?v=20260824-3"></script><script type="module" src="js/detalhes-proposta.js?v=20260824-3"></script>
+  <script src="js/condicao-venda.js?v=20260904-1"></script><script type="module" src="js/detalhes-proposta.js?v=20260904-5"></script>
 </body>
 </html>

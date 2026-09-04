@@ -1,0 +1,92 @@
+:root {
+  --admin-header-height: 64px;
+  --admin-header-navy: #091253;
+  --admin-header-blue: #004aad;
+}
+
+.admin-header {
+  width: 100%;
+  min-height: var(--admin-header-height);
+  padding: 0 24px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 24px;
+  color: #fff;
+  background: var(--admin-header-navy);
+  box-shadow: 0 8px 26px rgba(9, 18, 83, .16);
+}
+
+.admin-header-brand {
+  display: inline-flex;
+  align-items: center;
+  flex: none;
+}
+
+.admin-header-brand img {
+  width: auto;
+  height: 40px;
+  display: block;
+}
+
+.admin-header-actions {
+  min-width: 0;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 10px;
+}
+
+.admin-header-button {
+  min-height: 44px;
+  padding: .7rem 1.25rem;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border: 2px solid #fff;
+  border-radius: 6px;
+  color: #fff;
+  background: transparent;
+  font: inherit;
+  font-weight: 600;
+  line-height: 1.2;
+  text-align: center;
+  text-decoration: none;
+  white-space: nowrap;
+  cursor: pointer;
+  transition: color .25s ease, background-color .25s ease;
+}
+
+.admin-header-button:hover,
+.admin-header-button:focus-visible {
+  color: var(--admin-header-blue);
+  background: #fff;
+}
+
+.admin-header-button:disabled {
+  opacity: .65;
+  cursor: wait;
+}
+
+@media (max-width: 760px) {
+  .admin-header {
+    padding: 0 16px;
+    gap: 14px;
+  }
+
+  .admin-header-actions { gap: 7px; }
+  .admin-header-button { min-height: 40px; padding: .58rem .78rem; font-size: .78rem; }
+}
+
+@media (max-width: 520px) {
+  .admin-header {
+    min-height: auto;
+    padding-block: 12px;
+    align-items: flex-start;
+  }
+
+  .admin-header-brand img { height: 36px; }
+  .admin-header-actions { flex-wrap: wrap; }
+  .admin-header-button { flex: 1 1 auto; }
+  .admin-header-context { flex-basis: 100%; }
+}

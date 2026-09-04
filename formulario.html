@@ -6,7 +6,7 @@
   <meta name="theme-color" content="#091253" />
   <title>Enviar proposta | City Park</title>
   <link rel="stylesheet" href="css/theme.css" />
-  <link rel="stylesheet" href="css/formulario.css?v=20260820-1" />
+  <link rel="stylesheet" href="css/formulario.css?v=20260901-1" />
   <link rel="icon" href="data:," />
 </head>
 <body>
@@ -164,14 +164,15 @@
               <span><strong>Padrão</strong><small>SI 20% · 40 PM - 45% · 6 PS - 20% · 1 CH 15%</small></span>
             </label>
             <label class="choice-card wide">
-              <input type="radio" name="proposalType" value="outro" />
-              <span><strong>Outro</strong><small>Monte uma condição personalizada e confira o total automaticamente.</small></span>
+              <input type="radio" name="proposalType" value="personalizada" />
+              <span><strong>Personalizado</strong><small>Monte uma condição personalizada e confira o total automaticamente.</small></span>
             </label>
 
             <div id="proposalValueSummary" class="proposal-value-summary" aria-live="polite">
               <div><span>Valor da tabela</span><strong id="proposalTableValue">Carregando…</strong></div>
               <div><span>Total preenchido</span><strong id="proposalFilledValue">—</strong></div>
               <div id="proposalDifferenceBox"><span>Diferença</span><strong id="proposalDifferenceValue">—</strong></div>
+              <div id="proposalPercentageBox"><span>Porcentagem dentro da obra</span><strong id="proposalPercentageValue">—</strong></div>
             </div>
 
             <div class="custom-condition hidden" id="customProposalWrap">
@@ -187,8 +188,9 @@
                 <article class="payment-row required-payment" data-payment-row="sinal" data-periodicity="unica">
                   <div class="payment-name"><strong>Sinal</strong><small>Obrigatório · valor de entrada</small></div>
                   <label><span>Qtd.</span><input id="paymentSinalQuantity" type="number" value="1" min="1" max="1" readonly></label>
-                  <label><span>Valor</span><input id="paymentSinalValue" class="currency-input" type="text" inputmode="decimal" placeholder="R$ 0,00"></label>
                   <label><span>Data</span><input id="paymentSinalDate" type="date"></label>
+                  <label><span>Valor</span><input id="paymentSinalValue" class="currency-input" type="text" inputmode="decimal" placeholder="R$ 0,00"></label>
+                  <strong class="payment-percentage" data-payment-percentage="sinal">0%</strong>
                   <strong class="payment-total" data-payment-total="sinal">R$ 0,00</strong>
                 </article>
 
@@ -203,8 +205,9 @@
                 <article class="payment-row required-payment" data-payment-row="chaves" data-periodicity="unica">
                   <div class="payment-name"><strong>Chaves / financiamento</strong><small>Obrigatório · parcela final na entrega</small></div>
                   <label><span>Qtd.</span><input id="paymentChavesQuantity" type="number" value="1" min="1" max="1" readonly></label>
-                  <label><span>Valor</span><input id="paymentChavesValue" class="currency-input" type="text" inputmode="decimal" placeholder="R$ 0,00"></label>
                   <label><span>Data</span><input id="paymentChavesDate" type="date"></label>
+                  <label><span>Valor</span><input id="paymentChavesValue" class="currency-input" type="text" inputmode="decimal" placeholder="R$ 0,00"></label>
+                  <strong class="payment-percentage" data-payment-percentage="chaves">0%</strong>
                   <strong class="payment-total" data-payment-total="chaves">R$ 0,00</strong>
                 </article>
               </div>
@@ -245,7 +248,7 @@
             <option value="mensal">Mensal</option>
             <option value="semestral">Semestral</option>
             <option value="anual">Anual</option>
-            <option value="outra">Outro / negociação especial</option>
+            <option value="outra">Negociação especial</option>
           </select>
         </label>
         <button type="button" class="button button-add-payment" id="addPaymentButton">+ Adicionar parcela</button>
@@ -265,7 +268,7 @@
     <p>© 2026 | Plano A Construtora | Todos os direitos reservados.</p>
   </div>
 </footer>
-  <script src="js/condicao-venda.js?v=20260819-2"></script>
-  <script type="module" src="js/formulario.js?v=20260820-1"></script>
+  <script src="js/condicao-venda.js?v=20260904-1"></script>
+  <script type="module" src="js/formulario.js?v=20260901-1"></script>
 </body>
 </html>

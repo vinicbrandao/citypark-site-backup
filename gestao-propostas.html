@@ -3,67 +3,67 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="theme-color" content="#091253">
+  <meta name="theme-color" content="#071147">
   <meta name="robots" content="noindex, nofollow">
   <title>Gestão de Propostas | City Park</title>
-  <link rel="stylesheet" href="css/gestao-propostas.css?v=20260824-2">
+  <link rel="stylesheet" href="css/admin-shell.css?v=20260902-2">
+  <link rel="stylesheet" href="css/gestao-propostas.css?v=20260903-5">
   <link rel="icon" href="data:,">
   <style>html:not(.page-authorized) body { visibility: hidden; }</style>
 </head>
 <body>
   <header class="figma-topbar">
-    <a class="figma-brand" href="painel-admin.html" aria-label="Início do Ambiente Administrativo"><img src="img/CityPark-Branco.png" alt="City Park"></a>
+    <a class="figma-brand" href="painel-admin.html" aria-label="Início do Ambiente Administrativo">
+      <img src="img/CityPark-Branco.png" alt="City Park">
+      <strong>Ambiente Administrativo</strong>
+    </a>
     <a class="sales-link" href="vendas.html">Tabela de Vendas</a>
     <button id="btnSairAdmin" class="hidden-control" type="button">Sair</button>
   </header>
-  <section class="figma-titlebar"><h1>Ambiente Administrativo</h1></section>
+  <nav class="admin-navigation" aria-label="Módulos administrativos">
+    <a href="painel-admin.html">Visão geral</a>
+    <a href="tabela-admin.html">Tabela</a>
+    <a class="active" href="gestao-propostas.html" aria-current="page">Propostas</a>
+    <button type="button" disabled aria-label="Corretores, módulo ainda não disponível">Corretores</button>
+  </nav>
 
-  <main  class="proposal-management">
-    <button id="refreshProposals" class="hidden-control" type="button">Atualizar</button>
-    <div class="hidden-summary" aria-hidden="true"><span id="pendingCount">—</span><span id="approvedCount">—</span><span id="closedCount">—</span><span id="inactiveCount">—</span></div>
-    <input id="proposalSearch" class="hidden-control" type="search">
+  <main class="proposal-management">
+    <header class="page-intro">
+      <div><h1>Gestão de propostas</h1><p>Analise propostas e acompanhe prazos.</p></div>
+      <div class="page-actions">
+        <p id="proposalLastUpdated" class="page-updated-at">Atualizado em: —</p>
+        <button id="refreshProposals" class="refresh-button" type="button"><span aria-hidden="true">↻</span> Atualizar dados</button>
+      </div>
+    </header>
+
+    <section class="proposal-metrics" aria-label="Resumo das propostas">
+      <article data-tone="pending"><span aria-hidden="true">◷</span><div><small>Aguardando análise</small><strong id="pendingCount">—</strong><em>Prioridade comercial</em></div></article>
+      <article data-tone="approved"><span aria-hidden="true">✓</span><div><small>Aprovadas</small><strong id="approvedCount">—</strong><em>Em andamento</em></div></article>
+      <article data-tone="closed"><span aria-hidden="true">●</span><div><small>Encerradas</small><strong id="closedCount">—</strong><em>Negócios concluídos</em></div></article>
+      <article data-tone="inactive"><span aria-hidden="true">—</span><div><small>Inativas</small><strong id="inactiveCount">—</strong><em>Recusadas ou expiradas</em></div></article>
+    </section>
 
     <section class="management-card">
       <div class="management-heading">
-        <h2>Gestão de Propostas</h2>
-        <label class="filter-icon" title="Filtrar propostas">
-          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 5h18l-7 8v6l-4 2v-8L3 5Z"/></svg>
-          <select id="proposalStatusFilter" aria-label="Filtrar propostas por situação">
-            <option value="pending">Aguardando análise</option><option value="approved">Aprovadas</option><option value="closed">Encerradas</option><option value="inactive">Inativas</option><option value="all">Todas as propostas</option>
-          </select>
-        </label>
+        <div><h1>Propostas cadastradas</h1><small>Ordenadas das mais recentes para as mais antigas</small></div>
+        <div class="proposal-tools">
+          <label class="search-field" for="proposalSearch"><span aria-hidden="true">⌕</span><input id="proposalSearch" type="search" placeholder="Buscar cliente, corretor, unidade ou ID" autocomplete="off"></label>
+          <label class="status-filter" for="proposalStatusFilter"><h2>Situação</h2><select id="proposalStatusFilter" aria-label="Filtrar propostas por situação"><option value="pending">Aguardando análise</option><option value="approved">Aprovadas</option><option value="closed">Encerradas</option><option value="inactive">Inativas</option><option value="all">Todas as propostas</option></select></label>
+        </div>
       </div>
 
-      <div id="proposalLoading" class="loading-state" role="status" aria-live="polite">
-        <span class="spinner" aria-hidden="true"></span>
-        Carregando propostas…
-      </div>
-
+      <div id="proposalLoading" class="loading-state" role="status" aria-live="polite"><span class="spinner" aria-hidden="true"></span>Carregando propostas…</div>
       <div id="proposalTableWrap" class="table-wrap" hidden>
         <table class="proposal-table">
-          <thead>
-            <tr>
-              <th>Proposta</th>
-              <th>Corretor</th>
-              <th>Unidade</th>
-              <th>Imobiliária</th>
-              <th>Situação</th>
-              <th>Opções</th>
-            </tr>
-          </thead>
+          <thead><tr><th>Proposta</th><th>Corretor</th><th>Unidade</th><th>Imobiliária</th><th>Situação</th><th>Opções</th></tr></thead>
           <tbody id="proposalRows"></tbody>
         </table>
       </div>
-
-      <div id="proposalEmpty" class="empty-state" hidden>
-        <span aria-hidden="true">⌕</span>
-        <h2>Nenhuma proposta encontrada</h2>
-        <p>Ajuste o filtro ou a busca para visualizar outros registros.</p>
-      </div>
+      <div id="proposalEmpty" class="empty-state" hidden><span aria-hidden="true">⌕</span><h2>Nenhuma proposta encontrada</h2><p>Ajuste o filtro ou a busca para visualizar outros registros.</p></div>
     </section>
   </main>
 
   <div id="adminToast" class="toast" role="status" aria-live="polite"></div>
-  <script type="module" src="js/gestao-propostas.js?v=20260824-2"></script>
+  <script type="module" src="js/gestao-propostas.js?v=20260903-1"></script>
 </body>
 </html>

@@ -8,7 +8,7 @@ const PaymentPlan = window.CityParkPaymentPlan;
 const MAX_PAYMENT_GROUPS = PaymentPlan?.MAX_PAYMENT_GROUPS ?? 12;
 const PAYMENT_LABELS = {
   mensal: "Mensal", semestral: "Semestral", anual: "Anual",
-  outra: "Outro / negociação especial", unica: "Parcela única"
+  outra: "Negociação especial", unica: "Parcela única"
 };
 const PAYMENT_LIMITS = { mensal: 240, semestral: 60, anual: 30, outra: 1 };
 
@@ -161,7 +161,7 @@ function updateClientFields() {
 }
 
 function selectedProposalType() {
-  return document.querySelector("input[name='proposalType']:checked")?.value === "outro" ? "personalizada" : "padrao";
+  return document.querySelector("input[name='proposalType']:checked")?.value === "personalizada" ? "personalizada" : "padrao";
 }
 
 function updateProposalFields() {
@@ -243,8 +243,9 @@ function addPaymentGroup(periodicity) {
       ${isSpecial ? `<label class="special-description"><span>Descrição</span><input data-field="description" type="text" maxlength="300" placeholder="Descreva a negociação"></label>` : `<small>${paymentHelp(periodicity)}</small>`}
     </div>
     <label><span>Qtd.</span><input data-field="quantity" type="number" value="1" min="1" max="${PAYMENT_LIMITS[periodicity]}" ${isSpecial ? "readonly" : ""}></label>
-    <label><span>Valor da parcela</span><input data-field="value" class="currency-input" type="text" inputmode="decimal" placeholder="R$ 0,00"></label>
     <label><span>${isSpecial ? "Data" : "1º vencimento"}</span><input data-field="date" type="date"></label>
+    <label><span>Valor da parcela</span><input data-field="value" class="currency-input" type="text" inputmode="decimal" placeholder="R$ 0,00"></label>
+    <strong class="payment-percentage" data-payment-percentage>0%</strong>
     <strong class="payment-total" data-payment-total>R$ 0,00</strong>
     <button type="button" class="payment-remove" data-remove-payment="${id}" aria-label="Remover parcela">×</button>`;
   container.appendChild(row);
@@ -384,9 +385,9 @@ function buildStandardCondition(unit = currentUnit) {
   slots.grupo01 = paymentComponent({ quantity: PaymentPlan.MONTHLY_INSTALLMENTS, unitValue: monthly, periodicity: "mensal", description: "Parcelas mensais" });
   slots.grupo02 = paymentComponent({ quantity: PaymentPlan.SEMIANNUAL_INSTALLMENTS, unitValue: semiannual, periodicity: "semestral", description: "Parcelas semestrais" });
   return {
-    schemaVersao: 3, tipo: "padrao",
+    schemaVersao: 4, tipo: "padrao",
     descricao: `Sinal ${formatMoney(signal)} · ${PaymentPlan.MONTHLY_INSTALLMENTS} mensais de ${formatMoney(monthly)} · ${PaymentPlan.SEMIANNUAL_INSTALLMENTS} semestrais de ${formatMoney(semiannual)} · Chaves ${formatMoney(keys)}`,
-    valorTabelaCentavos: tableValue, totalCalculadoCentavos: tableValue, diferencaCentavos: 0,
+    valorTabelaCentavos: tableValue, totalCalculadoCentavos: tableValue, diferencaCentavos: 0, porcentagemObra: 100,
     componentes: {
       sinal: paymentComponent({ quantity: 1, unitValue: signal, periodicity: "unica", description: "Sinal" }),
       parcelas: slots,
@@ -438,7 +439,8 @@ function buildCustomCondition({ validate = true } = {}) {
   }
   const total = signalValue + keysValue + PaymentPlan.sumPaymentGroups(groups.map(group => ({ quantidade: group.quantity, valorUnitarioCentavos: group.unitValue })));
   const difference = currentTableValueCents - total;
-  if (difference !== 0) throw new Error(`O total da proposta precisa ser igual ao valor da tabela. Diferença atual: ${formatMoney(Math.abs(difference))} ${difference > 0 ? "a completar" : "acima do valor"}.`);
+  const percentage = PaymentPlan.percentageOfTable(total, currentTableValueCents);
+  if (percentage < 70) throw new Error(`A condição personalizada precisa alcançar pelo menos 70% do valor da unidade. Porcentagem atual: ${formatPercentage(percentage)}.`);
   const slots = emptyPaymentSlots();
   groups.forEach((group, index) => {
     slots[`grupo${String(index + 1).padStart(2, "0")}`] = paymentComponent({ quantity: group.quantity, unitValue: group.unitValue, periodicity: group.periodicity, date: group.date, description: group.description });
@@ -449,8 +451,8 @@ function buildCustomCondition({ validate = true } = {}) {
     `Chaves ${formatMoney(keysValue)}`
   ];
   return {
-    schemaVersao: 3, tipo: "personalizada", descricao: descriptionParts.join(" · ").slice(0, 1000),
-    valorTabelaCentavos: currentTableValueCents, totalCalculadoCentavos: total, diferencaCentavos: difference,
+    schemaVersao: 4, tipo: "personalizada", descricao: descriptionParts.join(" · ").slice(0, 1000),
+    valorTabelaCentavos: currentTableValueCents, totalCalculadoCentavos: total, diferencaCentavos: difference, porcentagemObra: percentage,
     componentes: {
       sinal: paymentComponent({ quantity: 1, unitValue: signalValue, periodicity: "unica", date: signalDate, description: "Sinal" }),
       parcelas: slots,
@@ -469,12 +471,15 @@ function recalculateCustomPlan() {
   const keys = readCurrencyInput("paymentChavesValue") || 0;
   document.querySelector("[data-payment-total='sinal']").textContent = formatMoney(signal);
   document.querySelector("[data-payment-total='chaves']").textContent = formatMoney(keys);
+  document.querySelector("[data-payment-percentage='sinal']").textContent = formatPercentage(PaymentPlan.percentageOfTable(signal, currentTableValueCents));
+  document.querySelector("[data-payment-percentage='chaves']").textContent = formatPercentage(PaymentPlan.percentageOfTable(keys, currentTableValueCents));
   let installmentTotal = 0;
   const { groups } = collectDynamicPayments();
   groups.forEach(group => {
     const total = Number.isInteger(group.quantity) && Number.isInteger(group.unitValue) ? group.quantity * group.unitValue : 0;
     installmentTotal += total;
     group.row.querySelector("[data-payment-total]").textContent = formatMoney(total);
+    group.row.querySelector("[data-payment-percentage]").textContent = formatPercentage(PaymentPlan.percentageOfTable(total, currentTableValueCents));
   });
   const total = signal + keys + installmentTotal;
   const difference = Number.isInteger(currentTableValueCents) ? currentTableValueCents - total : null;
@@ -492,16 +497,21 @@ function updateCustomBalance(total, difference) {
     message.textContent = "Aguarde o carregamento do valor da tabela.";
   } else if (!total) {
     status.textContent = "Preencha a condição";
-    message.textContent = "O total precisa ser exatamente igual ao valor da tabela para permitir o envio.";
-  } else if (difference === 0) {
+    message.textContent = "A condição personalizada precisa alcançar pelo menos 70% do valor da unidade.";
+  } else if (PaymentPlan.percentageOfTable(total, currentTableValueCents) >= 100) {
     status.textContent = "Valores conferidos";
     status.classList.add("balanced");
-    message.textContent = "A condição está completa e corresponde ao valor da tabela.";
+    message.textContent = difference === 0 ? "A condição está completa e corresponde ao valor da tabela." : "A condição alcançou mais de 100% do valor da unidade.";
+    message.classList.add("success");
+  } else if (PaymentPlan.percentageOfTable(total, currentTableValueCents) >= 70) {
+    status.textContent = "Envio permitido";
+    status.classList.add("balanced");
+    message.textContent = `${formatPercentage(PaymentPlan.percentageOfTable(total, currentTableValueCents))} do valor da unidade. A proposta pode ser enviada para negociação.`;
     message.classList.add("success");
   } else {
-    status.textContent = difference > 0 ? "Valor incompleto" : "Valor excedido";
+    status.textContent = "Mínimo não atingido";
     status.classList.add("unbalanced");
-    message.textContent = `${formatMoney(Math.abs(difference))} ${difference > 0 ? "a completar" : "acima do valor da tabela"}.`;
+    message.textContent = `${formatPercentage(PaymentPlan.percentageOfTable(total, currentTableValueCents))} preenchido. Alcance pelo menos 70% para enviar.`;
     message.classList.add("error");
   }
 }
@@ -519,6 +529,8 @@ function updateValueSummary(customTotal = null, customDifference = null) {
   }
   document.getElementById("proposalFilledValue").textContent = Number.isInteger(total) ? formatMoney(total) : "—";
   document.getElementById("proposalDifferenceValue").textContent = Number.isInteger(difference) ? formatMoney(difference) : "—";
+  const percentage = Number.isInteger(total) && Number.isInteger(currentTableValueCents) ? PaymentPlan.percentageOfTable(total, currentTableValueCents) : null;
+  document.getElementById("proposalPercentageValue").textContent = percentage === null ? "—" : formatPercentage(percentage);
   const box = document.getElementById("proposalDifferenceBox");
   box.classList.toggle("balanced", difference === 0 && Number.isInteger(total));
   box.classList.toggle("unbalanced", Number.isInteger(difference) && difference !== 0);
@@ -539,7 +551,6 @@ form.addEventListener("submit", async event => {
   catch (error) { showMessage(error.message, "error"); return; }
   clearMessage();
   if (!await showPaymentReview(condition)) return;
-  if (!await showFinalConfirmation(condition)) return;
   submitButton.disabled = true;
   submitButton.textContent = "Enviando…";
   try {
@@ -563,22 +574,15 @@ function showPaymentReview(condition) {
   const rows = activeConditionComponents(condition).map(component => `
     <article><div><strong>${escapeHtml(component.descricao || PAYMENT_LABELS[component.periodicidade])}</strong><small>${escapeHtml(component.periodicidade === "unica" ? "Parcela única" : PAYMENT_LABELS[component.periodicidade])}</small></div>
       <span>${component.quantidade} × ${formatMoney(component.valorUnitarioCentavos)}</span><strong>${formatMoney(component.totalCentavos)}</strong></article>`).join("");
+  const incompleteMessage = condition.porcentagemObra < 100
+    ? `<p class="review-warning"><strong>${formatPercentage(condition.porcentagemObra)} preenchido.</strong> Deseja enviar mesmo assim?</p>`
+    : "";
   return openReviewModal({
-    title: "Confirme a condição de pagamento", subtitle: "Confira todos os valores antes de avançar para o envio.", confirmText: "Confirmar pagamento",
+    title: "Confirme os dados da proposta", subtitle: "Confira as informações antes de enviar.", confirmText: "Enviar proposta",
     content: `<section class="review-section"><h3>Proposta</h3><div class="review-details">
-      <div><span>Unidade</span><strong>${escapeHtml(value("unit"))}</strong></div><div><span>Cliente</span><strong>${escapeHtml(client.nomeCompleto || client.razaoSocial)}</strong></div><div><span>Corretor</span><strong>${escapeHtml(brokerData.nome || "Não informado")}</strong></div></div></section>
-      <section class="review-section"><div class="review-section-heading"><h3>Condição de pagamento</h3><span>Valores conferidos</span></div><div class="review-finance-summary">
-      <div><span>Valor da tabela</span><strong>${formatMoney(condition.valorTabelaCentavos)}</strong></div><div><span>Total da proposta</span><strong>${formatMoney(condition.totalCalculadoCentavos)}</strong></div><div><span>Diferença</span><strong>${formatMoney(condition.diferencaCentavos)}</strong></div></div><div class="review-installments">${rows}</div></section>`
-  });
-}
-
-function showFinalConfirmation(condition) {
-  const client = buildClient();
-  return openReviewModal({
-    title: "Enviar esta proposta?", subtitle: "Esta é a confirmação final do cadastro.", confirmText: "Sim, enviar proposta",
-    content: `<section class="review-section"><div class="review-details"><div><span>Unidade</span><strong>${escapeHtml(value("unit"))}</strong></div>
-      <div><span>Cliente</span><strong>${escapeHtml(client.nomeCompleto || client.razaoSocial)}</strong></div><div><span>Valor</span><strong>${formatMoney(condition.totalCalculadoCentavos)}</strong></div></div>
-      <p class="review-description">Ao confirmar, a unidade será reservada por 7 dias e todas as informações serão enviadas ao Ambiente do Administrador.</p></section>`
+      <div><span>Unidade</span><strong>${escapeHtml(value("unit"))}</strong></div><div><span>Corretor</span><strong>${escapeHtml(brokerData.nome || "Não informado")}</strong></div><div><span>Cliente</span><strong>${escapeHtml(client.nomeCompleto || client.razaoSocial)}</strong></div></div></section>
+      <section class="review-section"><div class="review-section-heading"><h3>Condição de pagamento</h3><span>${condition.porcentagemObra >= 100 ? "Valores conferidos" : "Envio permitido"}</span></div><div class="review-finance-summary">
+      <div><span>Valor da tabela</span><strong>${formatMoney(condition.valorTabelaCentavos)}</strong></div><div><span>Total da proposta</span><strong>${formatMoney(condition.totalCalculadoCentavos)}</strong></div><div><span>Diferença</span><strong>${formatMoney(condition.diferencaCentavos)}</strong></div><div><span>Porcentagem</span><strong>${formatPercentage(condition.porcentagemObra)}</strong></div></div>${incompleteMessage}<div class="review-installments">${rows}</div></section>`
   });
 }
 
@@ -647,6 +651,7 @@ function showSuccessPopup() {
 }
 
 function formatMoney(cents) { return (Number(cents || 0) / 100).toLocaleString("pt-BR", { style: "currency", currency: "BRL" }); }
+function formatPercentage(value) { return `${Number(value || 0).toLocaleString("pt-BR", { minimumFractionDigits: 0, maximumFractionDigits: 2 })}%`; }
 function escapeHtml(value) {
   return String(value ?? "").replaceAll("&", "&amp;").replaceAll("<", "&lt;").replaceAll(">", "&gt;").replaceAll('"', "&quot;").replaceAll("'", "&#039;");
 }

@@ -26,6 +26,7 @@ const elements = {
   approvedCount: $("approvedCount"),
   closedCount: $("closedCount"),
   inactiveCount: $("inactiveCount"),
+  updatedAt: $("proposalLastUpdated"),
   toast: $("adminToast")
 };
 
@@ -105,6 +106,7 @@ async function loadProposals() {
       .sort((a, b) => dateValue(b.criadoEm) - dateValue(a.criadoEm));
     state.brokers = new Map(brokerSnapshot.docs.map(item => [item.id, { id: item.id, ...item.data() }]));
     state.units = new Map(unitSnapshot.docs.map(item => [item.id, { id: item.id, ...item.data() }]));
+    elements.updatedAt.textContent = `Atualizado em: ${new Intl.DateTimeFormat("pt-BR", { dateStyle: "short", timeStyle: "short" }).format(new Date())}`;
     renderSummary();
     renderRows();
   } catch (error) {
@@ -166,7 +168,7 @@ function renderProposalRow(proposal) {
       </td>
       <td><span class="cell-title">${escapeHtml(brokerage)}</span></td>
       <td><span class="status-badge" data-group="${group}">${escapeHtml(statusLabel(proposal.statusProposta))}</span></td>
-      <td><a class="open-button" data-proposal-id="${escapeHtml(proposal.id)}" href="detalhes-proposta.html?id=${encodeURIComponent(proposal.id)}">Abrir</a></td>
+      <td><a class="open-button" data-proposal-id="${escapeHtml(proposal.id)}" href="detalhes-proposta.html?id=${encodeURIComponent(proposal.id)}">Abrir</a><span class="expiry-line">${escapeHtml(expiryLabel(proposal))}</span></td>
     </tr>`;
 }
 
@@ -235,6 +237,18 @@ function formatCpfCnpj(value) {
   if (digits.length === 11) return digits.replace(/(\d{3})(\d{3})(\d{3})(\d{2})/, "$1.$2.$3-$4");
   if (digits.length === 14) return digits.replace(/(\d{2})(\d{3})(\d{3})(\d{4})(\d{2})/, "$1.$2.$3/$4-$5");
   return value || "—";
+}
+
+function expiryLabel(proposal) {
+  if (statusGroup(proposal.statusProposta) !== "pending") return "Sem prazo ativo";
+  const expiry = toDate(proposal.expiraEm);
+  if (!expiry) return "Expira em: prazo não informado";
+  const remaining = expiry.getTime() - Date.now();
+  if (remaining <= 0) return "Expira em: prazo encerrado";
+  const days = Math.floor(remaining / 86400000);
+  const hours = Math.ceil((remaining % 86400000) / 3600000);
+  if (days > 0) return `Expira em: ${days} dia${days === 1 ? "" : "s"} e ${hours}h`;
+  return `Expira em: ${hours} hora${hours === 1 ? "" : "s"}`;
 }
 
 function normalizeStatus(value) { return String(value || "").trim().toLowerCase(); }

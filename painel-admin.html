@@ -3,31 +3,94 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="theme-color" content="#091253">
+  <meta name="theme-color" content="#071147">
   <meta name="robots" content="noindex, nofollow">
   <title>Ambiente Administrativo | City Park</title>
-  <link rel="stylesheet" href="css/ambiente-admin.css?v=20260824-2">
+  <link rel="stylesheet" href="css/admin-shell.css?v=20260902-2">
+  <link rel="stylesheet" href="css/ambiente-admin.css?v=20260902-4">
   <link rel="icon" href="data:,">
   <style>html:not(.page-authorized) body { visibility: hidden; }</style>
 </head>
 <body>
   <header class="figma-topbar">
-    <a class="figma-brand" href="painel-admin.html" aria-label="Início do Ambiente Administrativo"><img src="img/CityPark-Branco.png" alt="City Park"></a>
+    <a class="figma-brand" href="painel-admin.html" aria-label="Início do Ambiente Administrativo">
+      <img src="img/CityPark-Branco.png" alt="City Park">
+      <strong>Ambiente Administrativo</strong>
+    </a>
     <a class="sales-link" href="vendas.html">Tabela de Vendas</a>
     <button id="btnSairAdmin" class="hidden-logout" type="button">Sair</button>
   </header>
 
-  <section class="figma-titlebar"><h1>Ambiente Administrativo</h1></section>
+  <nav class="admin-navigation" aria-label="Módulos administrativos">
+    <a class="active" href="painel-admin.html" aria-current="page">Visão geral</a>
+    <a href="tabela-admin.html">Tabela</a>
+    <a href="gestao-propostas.html">Propostas</a>
+    <button type="button" disabled aria-label="Corretores, módulo ainda não disponível">Corretores</button>
+  </nav>
 
-  <main class="figma-admin-home">
-    <p class="sr-only">Administrador conectado: <strong id="adminName">administrador</strong>. <span id="pendingProposalCount">—</span> propostas aguardam análise.</p>
-    <nav class="figma-module-options" aria-label="Módulos administrativos">
-      <a href="gestao-propostas.html">Propostas</a>
-      <button type="button" disabled aria-label="Corretores, módulo ainda não disponível">Corretores</button>
-    </nav>
+  <main class="admin-home">
+    <p id="lastUpdatedAt" class="dashboard-updated-at">Atualizado em: —</p>
+    <section class="welcome-panel" aria-labelledby="welcomeTitle">
+      <div>
+        <h1 id="welcomeTitle">Olá, <span id="adminName">administrador</span>.</h1>
+        <p>Acompanhe a disponibilidade do empreendimento e as propostas que precisam da sua atenção.</p>
+      </div>
+    </section>
+
+    <section class="dashboard-grid">
+      <article class="dashboard-card quick-actions-card">
+        <div class="card-heading"><div><h1>O que deseja gerenciar?</h1></div></div>
+        <div class="module-grid">
+          <a class="module-card" href="tabela-admin.html">
+            <div><strong>Tabela de unidades</strong><small>Visualize disponibilidade por torre e tipologia.</small></div>
+            <span class="module-arrow" aria-hidden="true">→</span>
+          </a>
+          <a class="module-card" href="gestao-propostas.html">
+            <div><strong>Gestão de propostas</strong><small>Analise reservas, valores e condições comerciais.</small></div>
+            <span class="module-arrow" aria-hidden="true">→</span>
+          </a>
+        </div>
+      </article>
+
+      <article class="dashboard-card inventory-card">
+        <div class="card-heading"><div><h2>Panorama do empreendimento</h2></div><a href="tabela-admin.html">Ver tabela</a></div>
+        <div class="inventory-visual">
+          <div id="inventoryDonut" class="inventory-donut" style="--available:0;--reserved:0" aria-label="Distribuição das unidades"><span><strong id="soldUnitCount">—</strong><small>vendidas</small></span></div>
+          <ul class="inventory-legend">
+            <li><span data-color="available"></span><div><strong>Disponíveis</strong><small id="availableLegend">— unidades</small></div></li>
+            <li><span data-color="reserved"></span><div><strong>Reservadas</strong><small id="reservedLegend">— unidades</small></div></li>
+            <li><span data-color="sold"></span><div><strong>Vendidas</strong><small id="soldLegend">— unidades</small></div></li>
+          </ul>
+        </div>
+      </article>
+
+      <section class="metric-grid" aria-label="Resumo operacional">
+        <article class="metric-card" data-tone="blue">
+          <div class="metric-icon" aria-hidden="true">▦</div>
+          <div><span>Total de unidades</span><strong id="totalUnitCount">—</strong><small>Inventário cadastrado</small></div>
+        </article>
+        <article class="metric-card" data-tone="green">
+          <div class="metric-icon" aria-hidden="true">✓</div>
+          <div><span>Disponíveis</span><strong id="availableUnitCount">—</strong><small id="availableUnitRate">— do empreendimento</small></div>
+        </article>
+        <article class="metric-card" data-tone="amber">
+          <div class="metric-icon" aria-hidden="true">◷</div>
+          <div><span>Reservadas</span><strong id="reservedUnitCount">—</strong><small>Inclui unidades aprovadas</small></div>
+        </article>
+        <article class="metric-card" data-tone="red">
+          <div class="metric-icon" aria-hidden="true">!</div>
+          <div><span>Propostas pendentes</span><strong id="pendingProposalCount">—</strong><small>Precisam de análise</small></div>
+        </article>
+      </section>
+
+      <article class="dashboard-card recent-card">
+        <div class="card-heading"><div><h2>Últimas propostas</h2></div><a href="gestao-propostas.html">Ver todas</a></div>
+        <div id="recentProposalList" class="recent-list" aria-live="polite"><div class="dashboard-loading"><span></span>Carregando movimentações…</div></div>
+      </article>
+    </section>
   </main>
 
   <div id="adminToast" class="admin-toast" role="status" aria-live="polite"></div>
-  <script type="module" src="js/ambiente-admin.js?v=20260824-2"></script>
+  <script type="module" src="js/ambiente-admin.js?v=20260902-2"></script>
 </body>
 </html>
